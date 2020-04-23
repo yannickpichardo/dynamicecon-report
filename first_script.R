@@ -13,3 +13,5 @@ epsilon= 'joojoj'
 weed=420
 
 kaas = "lekker"
+
+worst = "ook lekker"
