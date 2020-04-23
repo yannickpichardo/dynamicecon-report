@@ -4,5 +4,7 @@ if (epsilon < 1) {
 } else {
   print("Sucker")
 }
+
+lol= 69
 #jojo
 #pop
