@@ -8,4 +8,7 @@ if (epsilon < 1) {
 lol= 69
 #jojo
 #pop
+
+epsilon= 'joojoj'
 weed=420
+
