@@ -12,3 +12,4 @@ lol= 69
 epsilon= 'joojoj'
 weed=420
 
+kaas = "lekker"
