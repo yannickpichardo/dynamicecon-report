@@ -57,22 +57,22 @@ for (i in 1:3){
 min_index_aic
 
 #residual autocorrelation
-fit <- Arima(WEI, order = c(3,0,5))
+fit <- Arima(WEI, order = c(3,0,0))
 checkresiduals(fit)
 
-fit <- Arima(WEI, order = c(4,0,5))
+fit <- Arima(WEI, order = c(6,0,0))
 checkresiduals(fit)
 
-fit <- Arima(WEI, order = c(5,0,5))
+fit <- Arima(WEI, order = c(4,0,2))
 checkresiduals(fit)
 
-fit <- Arima(WEI, order = c(6,0,5))
+fit <- Arima(WEI, order = c(5,0,4))
 checkresiduals(fit)
 
-fit <- Arima(dlog_gnp, order = c(0,0,2))
+fit <- Arima(dlog_gnp, order = c(6,0,4))
 checkresiduals(fit)
 
-fit <- Arima(dlog_gnp, order = c(0,0,2))
+fit <- Arima(dlog_gnp, order = c(4,0,1))
 checkresiduals(fit)
 
 
