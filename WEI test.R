@@ -57,24 +57,30 @@ for (i in 1:3){
 min_index_aic
 
 #residual autocorrelation
-fit <- Arima(WEI, order = c(3,0,5))
+fit <- Arima(WEI, order = c(3,0,0))
 checkresiduals(fit)
 
-fit <- Arima(WEI, order = c(4,0,5))
+fit <- Arima(WEI, order = c(6,0,0))
 checkresiduals(fit)
 
-fit <- Arima(WEI, order = c(5,0,5))
+fit <- Arima(WEI, order = c(4,0,2))
 checkresiduals(fit)
 
-fit <- Arima(WEI, order = c(6,0,5))
+fit <- Arima(WEI, order = c(5,0,4))
 checkresiduals(fit)
 
-fit <- Arima(dlog_gnp, order = c(0,0,2))
+fit <- Arima(WEI, order = c(6,0,4))
 checkresiduals(fit)
 
-fit <- Arima(dlog_gnp, order = c(0,0,2))
+fit <- Arima(WEI, order = c(4,0,1))
 checkresiduals(fit)
 
+#the residual gaan vrij goed behalve bij 2020 omdat hier een schrok gebeurt,
+#die niet te economisch niet te voorspellen was met de data van de WEI alleen
+#wij willen nu variabelen zoeken die deze schrok wel kunnen voorspellen
+#en deze toevoegen aan het model.
+#Er is een grote autocorrelition tussen alle residuals precies na een jaar,
+#Waarom zou dit komen?
 
 
 
