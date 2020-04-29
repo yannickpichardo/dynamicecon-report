@@ -38,12 +38,23 @@ T_est
 colnames(bic_WEI) <- c("MA(0)","MA(1)","MA(2)","MA(3)","MA(4)")
 rownames(bic_WEI) <- c("AR(3)","AR(4)","AR(5)","AR(6)")
 bic_WEI
-
+min_values_bic= sort(bic_WEI)[1:3]
+min_index_bic=c() 
+for (i in 1:3){
+  min_index_bic[i] = which(bic_WEI==min_values_bic[i])
+}
+min_index_bic
 
 
 colnames(aic_WEI) <- c("MA(0)","MA(1)","MA(2)","MA(3)","MA(4)")
 rownames(aic_WEI) <- c("AR(3)","AR(4)","AR(5)","AR(6)")
 aic_WEI
+min_values_aic= sort(aic_WEI)[1:3]
+min_index_aic=c() 
+for (i in 1:3){
+  min_index_aic[i] = which(aic_WEI==min_values_aic[i])
+}
+min_index_aic
 
 #residual autocorrelation
 fit <- Arima(WEI, order = c(3,0,5))
