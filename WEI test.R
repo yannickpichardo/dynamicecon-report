@@ -22,15 +22,52 @@ Pacf(WEI)
 #MA gedeelte erg groot maar we hebben vraag gesteld op discussion board
 
 #information criteria
-bic_WEI = matrix(NA,4,16)
-aic_WEI = matrix(NA,4,16)
-T_est = matrix(NA,4,16)
+bic_WEI = matrix(NA,4,5)
+aic_WEI = matrix(NA,4,5)
+T_est = matrix(NA,4,5)
 for (i in seq(3,6)){
-  for (j in seq(5,20)){
+  for (j in seq(0,4)){
     fit = Arima(WEI, order = c(i,0,j))
-    T_est[i+1,j+1] = length(fit$residuals)
-    bic_WEI[i+1,j+1] = fit$bic
-    aic_WEI[i+1,j+1] = fit$aic
+    T_est[i-2,j+1] = length(fit$residuals)
+    bic_WEI[i-2,j+1] = fit$bic
+    aic_WEI[i-2,j+1] = fit$aic
   }
 }
+T_est
+
+colnames(bic_WEI) <- c("MA(0)","MA(1)","MA(2)","MA(3)","MA(4)")
+rownames(bic_WEI) <- c("AR(3)","AR(4)","AR(5)","AR(6)")
+bic_WEI
+
+
+
+colnames(aic_WEI) <- c("MA(0)","MA(1)","MA(2)","MA(3)","MA(4)")
+rownames(aic_WEI) <- c("AR(3)","AR(4)","AR(5)","AR(6)")
+aic_WEI
+
+#residual autocorrelation
+fit <- Arima(WEI, order = c(3,0,5))
+checkresiduals(fit)
+
+fit <- Arima(WEI, order = c(4,0,5))
+checkresiduals(fit)
+
+fit <- Arima(WEI, order = c(5,0,5))
+checkresiduals(fit)
+
+fit <- Arima(WEI, order = c(6,0,5))
+checkresiduals(fit)
+
+fit <- Arima(dlog_gnp, order = c(0,0,2))
+checkresiduals(fit)
+
+fit <- Arima(dlog_gnp, order = c(0,0,2))
+checkresiduals(fit)
+
+
+
+
+
+
+
 
