@@ -57,30 +57,59 @@ for (i in 1:3){
 min_index_aic
 
 #residual autocorrelation
-fit <- Arima(WEI, order = c(3,0,0))
-checkresiduals(fit)
+fit_1 <- Arima(WEI, order = c(3,0,0))
+checkresiduals(fit_1)
 
-fit <- Arima(WEI, order = c(6,0,0))
-checkresiduals(fit)
+fit_2 <- Arima(WEI, order = c(6,0,0))
+checkresiduals(fit_2)
 
-fit <- Arima(WEI, order = c(4,0,2))
-checkresiduals(fit)
+fit_3 <- Arima(WEI, order = c(4,0,2))
+checkresiduals(fit_3)
 
-fit <- Arima(WEI, order = c(5,0,4))
-checkresiduals(fit)
+fit_4 <- Arima(WEI, order = c(5,0,4))
+checkresiduals(fit_4)
 
-fit <- Arima(WEI, order = c(6,0,4))
-checkresiduals(fit)
+fit_5 <- Arima(WEI, order = c(6,0,4))
+checkresiduals(fit_5)
 
-fit <- Arima(WEI, order = c(4,0,1))
-checkresiduals(fit)
+fit_6 <- Arima(WEI, order = c(4,0,1))
+checkresiduals(fit_6)
 
 #the residual gaan vrij goed behalve bij 2020 omdat hier een schrok gebeurt,
 #die niet te economisch niet te voorspellen was met de data van de WEI alleen
 #wij willen nu variabelen zoeken die deze schrok wel kunnen voorspellen
 #en deze toevoegen aan het model.
+#Het dal rond 2020 komt gedeeltelijk omdat unemplyement insurance claims
+#deel zijn van de WEI deze zijn enorm gestegen https://fred.stlouisfed.org/series/ICSA
+#
 #Er is een grote autocorrelition tussen alle residuals precies na een jaar,
-#Waarom zou dit komen?
+#Waarom zou dit komen? Dit komt waarschijnlijk doordat de WEI series 
+#aangepast is op seasonality en hierdoor een foutje ontstaat in de acf
+#zie ook het document op nestor waar dit wordt uitgelegd in het einde van 4.3
+
+#kijken naar invertibility en stability door middel van de unit cirkel (ze moeten er in liggen)
+#en klein summary overzicht met de waardes van de coefficienten
+
+autoplot(fit_1)
+fit_1
+
+autoplot(fit_2)
+fit_2
+
+autoplot(fit_3)
+fit_3
+
+autoplot(fit_4)
+fit_4
+
+autoplot(fit_5)
+fit_5
+
+autoplot(fit_6)
+fit_6
+
+
+
 
 
 
