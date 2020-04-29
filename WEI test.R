@@ -22,21 +22,21 @@ Pacf(WEI)
 #MA gedeelte erg groot maar we hebben vraag gesteld op discussion board
 
 #information criteria
-bic_WEI = matrix(NA,4,5)
-aic_WEI = matrix(NA,4,5)
-T_est = matrix(NA,4,5)
-for (i in seq(3,6)){
-  for (j in seq(0,4)){
+bic_WEI = matrix(NA,7,6)
+aic_WEI = matrix(NA,7,6)
+T_est = matrix(NA,7,6)
+for (i in seq(2,8)){
+  for (j in seq(0,5)){
     fit = Arima(WEI, order = c(i,0,j))
-    T_est[i-2,j+1] = length(fit$residuals)
-    bic_WEI[i-2,j+1] = fit$bic
-    aic_WEI[i-2,j+1] = fit$aic
+    T_est[i-1,j+1] = length(fit$residuals)
+    bic_WEI[i-1,j+1] = fit$bic
+    aic_WEI[i-1,j+1] = fit$aic
   }
 }
 T_est
 
-colnames(bic_WEI) <- c("MA(0)","MA(1)","MA(2)","MA(3)","MA(4)")
-rownames(bic_WEI) <- c("AR(3)","AR(4)","AR(5)","AR(6)")
+colnames(bic_WEI) <- c("MA(0)","MA(1)","MA(2)","MA(3)","MA(4)",'MA(5)')
+rownames(bic_WEI) <- c('AR(2)',"AR(3)","AR(4)","AR(5)","AR(6)","AR(7)",'AR(8)')
 bic_WEI
 min_values_bic= sort(bic_WEI)[1:3]
 min_index_bic=c() 
@@ -46,8 +46,8 @@ for (i in 1:3){
 min_index_bic
 
 
-colnames(aic_WEI) <- c("MA(0)","MA(1)","MA(2)","MA(3)","MA(4)")
-rownames(aic_WEI) <- c("AR(3)","AR(4)","AR(5)","AR(6)")
+colnames(aic_WEI) <- c("MA(0)","MA(1)","MA(2)","MA(3)","MA(4)",'MA(5)')
+rownames(aic_WEI) <- c('AR(2)',"AR(3)","AR(4)","AR(5)","AR(6)","AR(7)",'AR(8)')
 aic_WEI
 min_values_aic= sort(aic_WEI)[1:3]
 min_index_aic=c() 
@@ -75,6 +75,12 @@ checkresiduals(fit_5)
 fit_6 <- Arima(WEI, order = c(4,0,1))
 checkresiduals(fit_6)
 
+fit_7 = Arima(WEI, order = c(52,0,2), fixed=c(NA,NA,NA,NA,0,0,0,
+                                              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                                              0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA,NA,NA,NA))
+p = checkresiduals(fit_7)
+
+which(fit$residual>0.08)
 #the residual gaan vrij goed behalve bij 2020 omdat hier een schrok gebeurt,
 #die niet te economisch niet te voorspellen was met de data van de WEI alleen
 #wij willen nu variabelen zoeken die deze schrok wel kunnen voorspellen
@@ -108,11 +114,8 @@ fit_5
 autoplot(fit_6)
 fit_6
 
-
-
-
-
-
+autoplot(fit_7)
+fit_7
 
 
 
