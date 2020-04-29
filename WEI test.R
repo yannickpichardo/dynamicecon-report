@@ -17,3 +17,4 @@ autoplot(WEI)
 
 Acf(WEI)
 Pacf(WEI)
+
