@@ -12,7 +12,8 @@ library('dplyr')
 data <- read_excel("WEI.xlsx", sheet = 'Weekly Data (2008-)')
 
 WEI = ts(data[,4], start= c(2008), frequency = 365.25/7)
-
+#WEI_no_corona = ts(data[1:629,4], start= c(2008), frequency = 365.25/7)
+#voor dicky fuller zonde corona maanden
 autoplot(WEI)
 
 #pacf en acf
@@ -20,6 +21,15 @@ Acf(WEI)
 Pacf(WEI)
 #AR gedeelte vanwege Pacf ongeveer 5 
 #MA gedeelte erg groot maar we hebben vraag gesteld op discussion board
+
+#Dickey Fuller test
+pmax    <- floor(12*((length(WEI)/100)^0.25))
+dft     <- ur.df(WEI,type=c("drift"),lags=pmax,selectlags=c("BIC"))
+summdf  <- summary(dft)
+print(summdf@test.name)
+print(c("Test statistic: ", summdf@teststat[1]))
+print(c("Crit. vals", summdf@cval[1,]))
+
 
 #information criteria
 bic_WEI = matrix(NA,7,6)
@@ -57,13 +67,13 @@ for (i in 1:3){
 min_index_aic
 
 #residual autocorrelation
-fit_1 <- Arima(WEI, order = c(3,0,0))
+fit_1 <- Arima(WEI, order = c(2,0,3))
 checkresiduals(fit_1)
 
-fit_2 <- Arima(WEI, order = c(6,0,0))
+fit_2 <- Arima(WEI, order = c(3,0,0))
 checkresiduals(fit_2)
 
-fit_3 <- Arima(WEI, order = c(4,0,2))
+fit_3 <- Arima(WEI, order = c(2,0,0))
 checkresiduals(fit_3)
 
 fit_4 <- Arima(WEI, order = c(5,0,4))
@@ -72,13 +82,13 @@ checkresiduals(fit_4)
 fit_5 <- Arima(WEI, order = c(6,0,4))
 checkresiduals(fit_5)
 
-fit_6 <- Arima(WEI, order = c(4,0,1))
+fit_6 <- Arima(WEI, order = c(7,0,5))
 checkresiduals(fit_6)
 
-fit_7 = Arima(WEI, order = c(52,0,2), fixed=c(NA,NA,NA,NA,0,0,0,
+fit_7 = Arima(WEI, order = c(52,0,3), fixed=c(NA,NA,0,0,0,0,0,
                                               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-                                              0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA,NA,NA,NA))
-p = checkresiduals(fit_7)
+                                              0,0,0,0,0,0,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA))
+checkresiduals(fit_7)
 
 which(fit$residual>0.08)
 #the residual gaan vrij goed behalve bij 2020 omdat hier een schrok gebeurt,
@@ -94,7 +104,7 @@ which(fit$residual>0.08)
 #zie ook het document op nestor waar dit wordt uitgelegd in het einde van 4.3
 
 #kijken naar invertibility en stability door middel van de unit cirkel (ze moeten er in liggen)
-#en klein summary overzicht met de waardes van de coefficienten
+#en klein summary overzicht met de waardes van de coefficienten.
 
 autoplot(fit_1)
 fit_1
