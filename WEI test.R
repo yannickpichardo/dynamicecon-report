@@ -104,7 +104,7 @@ which(fit$residual>0.08)
 #zie ook het document op nestor waar dit wordt uitgelegd in het einde van 4.3
 
 #kijken naar invertibility en stability door middel van de unit cirkel (ze moeten er in liggen)
-#en klein summary overzicht met de waardes van de coefficienten
+#en klein summary overzicht met de waardes van de coefficienten.
 
 autoplot(fit_1)
 fit_1
