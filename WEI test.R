@@ -7,14 +7,79 @@ library('corrplot')# For plotting correlation matrices
 library('quadprog')# For quadratic optimization
 library('forecast')
 library('dplyr')
+library('xts')
+library('zoo')
+
+lowfreq      <- zoo(,time(ffr_q))
+highfreq     <- zoo(ffr,time(ffr))
+ffr3         <- merge(lowfreq,highfreq)
+ffr3$lowfreq <- na.approx(ffr3$FEDFUNDS.lowfreq, rule=2)
+autoplot(ffr3)
+ffr_ts       <- as.ts(ffr3$lowfreq)
+
+
+CCI = read.csv('DP_LIVE_07052020144921792.csv') 
+CCI = CCI[158:length(CCI$Value),]
+CCI = CCI %>% mutate(percentage = Value - 100)
+CCI$percentage
+
+
+months = c(31,28,31,30,31,30,31,31,30,31,30,31)
+CCI_days = c()
+for (i in 1:length(CCI$percentage)){
+  j = (i %% 12) 
+  if (i %% 12 == 0){
+    j=12
+  }
+  CCI_days = c(CCI_days, rep(CCI$percentage[i],months[j]))
+}
+CCI_days    
+
+
+CCI_week_mean = c()
+for (i in 1:floor(length(CCI_days) /7)){
+  CCI_week_mean = c(CCI_week_mean, mean(CCI_days[(7*i +1):(7*(i+1))]))
+}
+CCI_week_mean[length(CCI_week_mean)] = CCI_week_mean[length(CCI_week_mean)-1]
+CCI_week_mean = c(CCI_week_mean,CCI_week_mean[length(CCI_week_mean)-1])
+CCI_week_mean
+length(CCI_week_mean)
+CCI_unique =c()
+for (i in 1:length(unique(CCI_week_mean))) {
+  CCI_unique[i] = min(which(CCI_week_mean == unique(CCI_week_mean)[i]))
+  
+}
+CCI_week = c()
+for (i in 1:(length(CCI_unique)-1)){
+  seq = seq(from = CCI_week_mean[CCI_unique[i]], to =  CCI_week_mean[CCI_unique[i+1]], length.out = CCI_unique[i+1]-CCI_unique[i]+1)
+  
+  CCI_week = c(CCI_week,seq[1:(length(seq)-1)])
+}
+CCI_week = c(CCI_week,seq(from = CCI_week_mean[CCI_unique[length(CCI_unique)-1]], to = CCI_week_mean[CCI_unique[length(CCI_unique)]],length.out = 6)[2:6])
+CCI_week
+
+CCI = ts(CCI_week, start = c(2008), frequency = 52)
+autoplot(CCI)
+
+d_CCI <- diff(CCI)
+autoplot(d_CCI)
+
+
 
 
 data <- read_excel("WEI.xlsx", sheet = 'Weekly Data (2008-)')
 
-WEI = ts(data[,4], start= c(2008), frequency = 365.25/7)
+WEI = ts(data[,4], start= c(2008), frequency = 52)
+
 #WEI_no_corona = ts(data[1:629,4], start= c(2008), frequency = 365.25/7)
 #voor dicky fuller zonde corona maanden
 autoplot(WEI)
+autoplot(diff(WEI))
+d_WEI <- diff(WEI)
+ts.plot(d_CCI, d_WEI)
+
+
+
 
 #pacf en acf
 Acf(WEI)
