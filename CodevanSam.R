@@ -1,5 +1,5 @@
 
-install.packages("DataCombine")
+install.packages("forecast")
 library("DataCombine")
 library("corrplot")
 library("tidyverse")
@@ -17,6 +17,16 @@ library("stats")
 library("faraway")
 library("ggpubr")
 library("wordcloud")
+library("tseries")
+library('fpp2')    # For forecasting
+library('dynlm')   # To estimate ARDL models
+library('urca')    # For the Dickey Fuller test
+library('corrplot')# For plotting correlation matrices
+library('quadprog')# For quadratic optimization
+library('forecast')
+
+
+install.packages("tseries")
 
 ## Data manipulation ##
 
@@ -129,7 +139,7 @@ plot12 <- ggplot(data = data) +
 plot12
 
 plot13 <- ggplot(data = data) + 
-  geom_line(mapping = aes(x = Date, y = WEIchange, color = "red"))
+  geom_line(mapping = aes(x = Date, y = BBchange, color = "red"))
 plot13
 
 plot14 <- ggplot(data = sp500data) + 
@@ -160,9 +170,18 @@ plot(data$BB ,data$WEI)
 plot(data$T10Y3M, data$WEI)
 plot(data$M1, data$WEI)
 
+?autoplot
+BB_time_series = ts(data[, 9], start = c(2008), frequency = 365.25/7)
+BB_ts_change = diff(BB_time_series)
+data$BB_t
 WEI = ts(data[,4], start= c(2008), frequency = 365.25/7)
+autoplot(diff(BB))
+autoplot(diff(WEI))
 plot(x = data$Date, y = data$WEI)
 plot(x = data$Date, y = diff(data$WEI))
+
+een_variabele_naam <- cbind(diff(WEI), diff(BB_time_series / 100000))
+plot.ts(een_variabele_naam, plot.type = "single", col = c("blue", "red"))
 
 ## Correlation matrix and plots ##
 
@@ -202,4 +221,10 @@ summary(model5)
 
 model6 <- lm(WEI ~ lnOil + FFR + T10Y3M, data = data)
 summary(model5)
+
+## Autocorrelation models (acf and pacf) ##
+
+?acf
+acf(data$sp500_perc_change, na.action = na.pass)
+pacf(data$sp500_perc_change, na.action = na.pass)
 
