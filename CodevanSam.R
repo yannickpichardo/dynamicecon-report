@@ -38,7 +38,7 @@ sp500data <- sp500data %>%
 sp500data <- sp500data %>% 
   mutate(average_open_close = (Open + Close) / 2)
 
-data <- data %>% cbind.(sp500data$average_open_close)
+data <- data %>% cbind(sp500data$average_open_close)
 colnames(data)[20] <- "average_open_close"
 
 BBchange <- PercChange(data = data, Var = "BB", NewVar = "BBchange")
@@ -66,6 +66,10 @@ data$lnSP500 <- log(data$`S&P500`)
 data$lnBB <- log(data$BB)
 data$lnM1 <- log(data$M1)
 data$lnOil <- log(data$Oil)
+
+WEI_time_series_change <- diff(data$WEI)
+WEI_time_series_change <- append(WEI_time_series_change, 0, after = 0)
+data <- data %>% cbind(WEI_time_series_change)
 
 ## Plotting several variables against the WEI to identify some correlation ##
 
@@ -170,18 +174,64 @@ plot(data$BB ,data$WEI)
 plot(data$T10Y3M, data$WEI)
 plot(data$M1, data$WEI)
 
+plot17 <- ggplot(data = data) + 
+  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
+  geom_line(aes(x = Date, y = sp500_perc_change / 5, color = "lightblue")) + 
+  geom_line(aes(x = Date, y = 0 , color = "green")) +
+  ggtitle("Change in WEI vs S&P500 growth rate")
+plot17
+
+plot18 <- ggplot(data = data) + 
+  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
+  geom_line(aes(x = Date, y = BBchange / 10, color = "lightblue")) + 
+  geom_line(aes(x = Date, y = 0 , color = "green")) +
+  ggtitle("Change in WEI vs BB growth rate")
+plot18
+
+plot19 <- ggplot(data = data) + 
+  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
+  geom_line(aes(x = Date, y = M1change / 2, color = "lightblue")) + 
+  geom_line(aes(x = Date, y = 0 , color = "green")) +
+  ggtitle("Change in WEI vs M1 growth rate")
+plot19
+
+
+## Gekloot met time series ##
+
 ?autoplot
+
 BB_time_series = ts(data[, 9], start = c(2008), frequency = 365.25/7)
 BB_ts_change = diff(BB_time_series)
 data$BB_t
-WEI = ts(data[,4], start= c(2008), frequency = 365.25/7)
+?rep
+y <- data.frame(rep(c(0), times = 639))
+
+WEI_time_series = ts(data[,4], start= c(2008), frequency = 365.25/7)
+WEI_ts_change = diff(WEI_time_series)
+time_series_data <- data.frame(WEI_ts_change)
+data$WEI_time_series <- WEI_time_series
+
+WEI_time_series_change <- diff(data$WEI)
+WEI_time_series_change <- append(WEI_time_series_change, 0, after = 0)
+data <- data %>% cbind(WEI_time_series_change)
+
+ggplot(data = data) + 
+  geom_line(aes(x = Date, y = diff(WEI)))
+
 autoplot(diff(BB))
-autoplot(diff(WEI))
+p1 <- autoplot(diff(WEI))
 plot(x = data$Date, y = data$WEI)
 plot(x = data$Date, y = diff(data$WEI))
 
+p1$layers +
+  geom_line(data = data, 
+            mapping = aes(x = Date, y = sp500_perc_change),
+            inherit.aes = F)
+
 een_variabele_naam <- cbind(diff(WEI), diff(BB_time_series / 100000))
 plot.ts(een_variabele_naam, plot.type = "single", col = c("blue", "red"))
+
+#########################################################################
 
 ## Correlation matrix and plots ##
 
@@ -195,7 +245,8 @@ cor.test(x = data$WEI, y = data$`S&P500`, method=c("pearson", "kendall", "spearm
 
 cor_all <- cor(data[4:10]) 
 corrplot(cor_all, method = "color", na.rm = T)
-##comment
+
+
 ## Regressing several variables to identify statsitical significance ##
 
 model1 <- lm(WEI ~ T10Y3M + BBchange, data = data)
