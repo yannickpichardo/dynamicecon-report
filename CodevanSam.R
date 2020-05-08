@@ -1,8 +1,9 @@
 
-install.packages("DataCombine")
+install.packages("forecast")
 library("DataCombine")
 library("corrplot")
 library("tidyverse")
+library("dplyr")
 library("openxlsx")
 library("hexbin")
 library("mapproj")
@@ -16,10 +17,29 @@ library("stats")
 library("faraway")
 library("ggpubr")
 library("wordcloud")
+library("tseries")
+library('fpp2')    # For forecasting
+library('dynlm')   # To estimate ARDL models
+library('urca')    # For the Dickey Fuller test
+library('corrplot')# For plotting correlation matrices
+library('quadprog')# For quadratic optimization
+library('forecast')
+
+
+install.packages("tseries")
 
 ## Data manipulation ##
 
 data <- read.xlsx("WEI.xlsx", sheet = 2, detectDates = TRUE)
+sp500data <- read.csv("GSPC.csv")
+
+sp500data <- sp500data %>% 
+  mutate(average_high_low = (High + Low) / 2)
+sp500data <- sp500data %>% 
+  mutate(average_open_close = (Open + Close) / 2)
+
+data <- data %>% cbind.(sp500data$average_open_close)
+colnames(data)[20] <- "average_open_close"
 
 BBchange <- PercChange(data = data, Var = "BB", NewVar = "BBchange")
 BBchange <- BBchange$BBchange
@@ -37,6 +57,10 @@ data$WEIchange <- WEIchange
 SP500change <- PercChange(data = data, Var = "S&P500", NewVar = "SP500change")
 SP500change <- SP500change$SP500change
 data$SP500change <- SP500change
+
+sp500_perc_change<- PercChange(data = data, Var = "average_open_close", NewVar = "sp500_perc_change")
+sp500_perc_change <- sp500_perc_change$sp500_perc_change
+data$sp500_perc_change <- sp500_perc_change
 
 data$lnSP500 <- log(data$`S&P500`)
 data$lnBB <- log(data$BB)
@@ -64,8 +88,9 @@ plot4
 
 plot5 <- ggplot(data = data) +
   geom_line(mapping = aes(x = Date, y = WEI), color = "blue", label = "WEI") +
-  geom_line(mapping = aes(x = Date, y = BBchange, color = "red", label = "Change in BB")) +
-  geom_line(mapping = aes(x = Date, y = T10Y3M, color = "black", label = "Bond rates"))
+  geom_line(mapping = aes(x = Date, y = sp500_perc_change, color = "red", label = "Change in BB")) +
+  geom_line(mapping = aes(x = Date, y = T10Y3M, color = "black", label = "Bond rates")) + 
+  geom_line(aes(x = Date, y = 0))
 plot5
 
 plot6 <- ggplot(data = data) +
@@ -76,18 +101,26 @@ plot6 <- ggplot(data = data) +
 plot6
 
 plot7 <- ggplot(data = data) + 
-  geom_line(mapping = aes(x = Date, y = WEIchange, color = "red")) +
-  geom_line(mapping = aes(x = Date, y = M1change, color = "blue"))
+  geom_line(aes(x = Date, y = WEI, color = "darkred")) +
+  geom_line(aes(x = Date, y = M1change, color = "lightblue")) +
+  geom_line(aes(x = Date, y = 0, color = "black")) +
+  ggtitle("WEI vs Money supply growth") +
+  ylab("WEI and the M1 growth") + 
+  theme(legend.position = "none")
 plot7
 
 plot8 <- ggplot(data = data) +
-  geom_line(aes(x = Date, y = WEI, color = "Red")) +
-  geom_line(aes(x = Date, y = BBchange, color = "Blue"))
+  geom_line(aes(x = Date, y = WEI, color = "darkred")) +
+  geom_line(aes(x = Date, y = BBchange, color = "lightblue")) + 
+  geom_line(aes(x = Date, y = 0 , color = "black")) + 
+  ggtitle("WEI vs Bank borrowings growth") +
+  ylab("WEI and the BB growth") + 
+  theme(legend.position = 'none')
 plot8
 
 plot9 <- ggplot(data = data) +
-  geom_line(aes(x = Date, y = BBchange, color = "Red")) + 
-  geom_line(aes(x = Date, y = M1change, color = "Blue"))
+  geom_line(aes(x = Date, y = BBchange, color = "darkred")) + 
+  geom_line(aes(x = Date, y = M1change, color = "lightblue"))
 plot9
 
 plot10 <- ggplot(data = data) +
@@ -106,8 +139,27 @@ plot12 <- ggplot(data = data) +
 plot12
 
 plot13 <- ggplot(data = data) + 
-  geom_line(mapping = aes(x = Date, y = WEIchange, color = "red"))
+  geom_line(mapping = aes(x = Date, y = BBchange, color = "red"))
 plot13
+
+plot14 <- ggplot(data = sp500data) + 
+  geom_line(aes(x = Date, y = average_high_low, group = 1, color = "darkred")) +
+  geom_line(aes(x = Date, y = average_open_close, group = 1, color = "lightblue"))
+plot14
+
+plot15 <- ggplot(data = data) + 
+  geom_line(aes(x = Date, y = SP500change, color = "darkred")) + 
+  geom_line(aes(x = Date, y = sp500_perc_change, color = "lightblue"))
+plot15
+
+plot16 <- ggplot(data = data) + 
+  geom_line(aes(x = Date, y = WEI, color = "darkred")) + 
+  geom_line(aes(x = Date, y = sp500_perc_change, color = "lightblue")) +
+  geom_line(aes(x = Date, y = 0), color = "black") +
+  ggtitle("The WEI vs S&P500 growth rates") +
+  ylab("WEI and S&P500 percentage changes") +
+  theme(legend.position = "none")
+plot16
 
 data[(which.min(data$WEIchange) - 1):(which.min(data$WEIchange) + 1), ]
 plot(x = data$Date, y = data$WEI, type = "l")
@@ -117,6 +169,19 @@ par(mfcol = c(2,2))
 plot(data$BB ,data$WEI)
 plot(data$T10Y3M, data$WEI)
 plot(data$M1, data$WEI)
+
+?autoplot
+BB_time_series = ts(data[, 9], start = c(2008), frequency = 365.25/7)
+BB_ts_change = diff(BB_time_series)
+data$BB_t
+WEI = ts(data[,4], start= c(2008), frequency = 365.25/7)
+autoplot(diff(BB))
+autoplot(diff(WEI))
+plot(x = data$Date, y = data$WEI)
+plot(x = data$Date, y = diff(data$WEI))
+
+een_variabele_naam <- cbind(diff(WEI), diff(BB_time_series / 100000))
+plot.ts(een_variabele_naam, plot.type = "single", col = c("blue", "red"))
 
 ## Correlation matrix and plots ##
 
@@ -128,7 +193,9 @@ cor(data[4:11])
 cor(data[-1])
 cor.test(x = data$WEI, y = data$`S&P500`, method=c("pearson", "kendall", "spearman"))
 
-
+cor_all <- cor(data[4:10]) 
+corrplot(cor_all, method = "color", na.rm = T)
+##comment
 ## Regressing several variables to identify statsitical significance ##
 
 model1 <- lm(WEI ~ T10Y3M + BBchange, data = data)
@@ -150,8 +217,14 @@ plot(model4)
 
 model5 <- lm(WEI ~ lnSP500 + lnBB + lnM1 + lnOil, data = data)
 summary(model5)
-plot(model5)
 
-model5 <- lm(WEI ~ lnOil + FFR + T10Y3M, data = data)
+
+model6 <- lm(WEI ~ lnOil + FFR + T10Y3M, data = data)
 summary(model5)
+
+## Autocorrelation models (acf and pacf) ##
+
+?acf
+acf(data$sp500_perc_change, na.action = na.pass)
+pacf(data$sp500_perc_change, na.action = na.pass)
 
