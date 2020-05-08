@@ -23,7 +23,9 @@ CCI = CCI[158:length(CCI$Value),]
 CCI = CCI %>% mutate(percentage = Value - 100)
 CCI$percentage
 
-
+CCI = ts(CCI[,9], start= c(2008), frequency = 12)
+autoplot(CCI)
+autoplot(diff(CCI))
 months = c(31,28,31,30,31,30,31,31,30,31,30,31)
 CCI_days = c()
 for (i in 1:length(CCI$percentage)){
@@ -65,7 +67,7 @@ d_CCI <- diff(CCI)
 autoplot(d_CCI)
 
 
-
+cor(CCI,WEI)
 
 data <- read_excel("WEI.xlsx", sheet = 'Weekly Data (2008-)')
 
@@ -78,6 +80,9 @@ autoplot(diff(WEI))
 d_WEI <- diff(WEI)
 ts.plot(d_CCI, d_WEI)
 
+WEI = ts(data[,4], start= c(2008), frequency = 365.25/7)
+autoplot(WEI)
+autoplot(diff(WEI))
 
 
 
