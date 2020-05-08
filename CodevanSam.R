@@ -193,9 +193,9 @@ cor(data[4:11])
 cor(data[-1])
 cor.test(x = data$WEI, y = data$`S&P500`, method=c("pearson", "kendall", "spearman"))
 
-cor_all <- cor(data[4:10])
+cor_all <- cor(data[4:10]) 
 corrplot(cor_all, method = "color", na.rm = T)
-
+##comment
 ## Regressing several variables to identify statsitical significance ##
 
 model1 <- lm(WEI ~ T10Y3M + BBchange, data = data)
