@@ -75,8 +75,8 @@ WEI = ts(data[,4], start= c(2008), frequency = 52)
 
 #WEI_no_corona = ts(data[1:629,4], start= c(2008), frequency = 365.25/7)
 #voor dicky fuller zonde corona maanden
-autoplot(WEI)
-autoplot(diff(WEI))
+autoplot(WEI) #figure 1 lijn rond 0
+autoplot(diff(WEI)) # naast figure 1
 d_WEI <- diff(WEI)
 ts.plot(d_CCI, d_WEI)
 
@@ -87,8 +87,8 @@ autoplot(diff(WEI))
 
 
 #pacf en acf
-Acf(WEI)
-Pacf(WEI)
+Acf(WEI) #figure 2 
+Pacf(WEI)  #figure 2
 #AR gedeelte vanwege Pacf ongeveer 5 
 #MA gedeelte erg groot maar we hebben vraag gesteld op discussion board
 
@@ -99,6 +99,8 @@ summdf  <- summary(dft)
 print(summdf@test.name)
 print(c("Test statistic: ", summdf@teststat[1]))
 print(c("Crit. vals", summdf@cval[1,]))
+#crit vals 1pct 5pct 10pct  figure 3
+
 
 
 #information criteria
@@ -117,7 +119,7 @@ T_est
 
 colnames(bic_WEI) <- c("MA(0)","MA(1)","MA(2)","MA(3)","MA(4)",'MA(5)')
 rownames(bic_WEI) <- c('AR(2)',"AR(3)","AR(4)","AR(5)","AR(6)","AR(7)",'AR(8)')
-bic_WEI
+bic_WEI #table 1
 min_values_bic= sort(bic_WEI)[1:3]
 min_index_bic=c() 
 for (i in 1:3){
@@ -128,7 +130,7 @@ min_index_bic
 
 colnames(aic_WEI) <- c("MA(0)","MA(1)","MA(2)","MA(3)","MA(4)",'MA(5)')
 rownames(aic_WEI) <- c('AR(2)',"AR(3)","AR(4)","AR(5)","AR(6)","AR(7)",'AR(8)')
-aic_WEI
+aic_WEI #table 2
 min_values_aic= sort(aic_WEI)[1:3]
 min_index_aic=c() 
 for (i in 1:3){
@@ -137,7 +139,7 @@ for (i in 1:3){
 min_index_aic
 
 #residual autocorrelation
-fit_1 <- Arima(WEI, order = c(2,0,3))
+fit_1 <- Arima(WEI, order = c(2,0,3)) #figure 4
 checkresiduals(fit_1)
 
 fit_2 <- Arima(WEI, order = c(3,0,0))
@@ -146,7 +148,7 @@ checkresiduals(fit_2)
 fit_3 <- Arima(WEI, order = c(2,0,0))
 checkresiduals(fit_3)
 
-fit_4 <- Arima(WEI, order = c(5,0,4))
+fit_4 <- Arima(WEI, order = c(5,0,4)) #figure 5
 checkresiduals(fit_4)
 
 fit_5 <- Arima(WEI, order = c(6,0,4))
@@ -158,7 +160,7 @@ checkresiduals(fit_6)
 fit_7 = Arima(WEI, order = c(52,0,3), fixed=c(NA,NA,0,0,0,0,0,
                                               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
                                               0,0,0,0,0,0,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA))
-checkresiduals(fit_7)
+checkresiduals(fit_7) #figure 6
 
 which(fit$residual>0.08)
 #the residual gaan vrij goed behalve bij 2020 omdat hier een schrok gebeurt,
