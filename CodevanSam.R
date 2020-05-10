@@ -104,13 +104,13 @@ plot6 <- ggplot(data = data) +
   geom_line(aes(x = Date, y = lnM1, color = "white"))
 plot6
 
-plot7 <- ggplot(data = data) + 
-  geom_line(aes(x = Date, y = WEI, color = "darkred")) +
-  geom_line(aes(x = Date, y = M1change, color = "lightblue")) +
-  geom_line(aes(x = Date, y = 0, color = "black")) +
-  ggtitle("WEI vs Money supply growth") +
-  ylab("WEI and the M1 growth") + 
-  theme(legend.position = "none")
+plot7 <- ggplot(data = data, aes(x = Date)) + 
+  geom_line(aes(y =WEI, colour = "WEI")) +
+  geom_line(aes(y = M1change, color = "Money supply")) +
+  geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
+                                                                    values = c("WEI"="green", "Money supply"="blue")) +
+  ggtitle("WEI vs Money supply percentage change") +
+  ylab("WEI and Money supply percentage change") 
 plot7
 
 plot8 <- ggplot(data = data, aes(x = Date)) +
@@ -118,8 +118,8 @@ plot8 <- ggplot(data = data, aes(x = Date)) +
   geom_line(aes(y =BBchange, colour = "Bank borrowings")) + 
   geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
                                                                     values = c("WEI"="green", "Bank borrowings"="blue")) +
-  ggtitle("WEI vs Bank borrowings percentage growth") +
-  ylab("WEI and the BB percentage growth")  
+  ggtitle("WEI vs Bank borrowings percentage change") +
+  ylab("WEI and the BB percentage percentage change")  
 plot8
 
 plot9 <- ggplot(data = data) +
