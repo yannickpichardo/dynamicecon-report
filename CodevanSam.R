@@ -59,7 +59,7 @@ plot3
 
 plot4 <- ggplot(data = data) +
   geom_line(mapping = aes(x = Date, y = WEI), color = "blue") +
-  geom_line(mapping = aes(x = Date, y = T10Y30M, color = "red"))
+  geom_line(mapping = aes(x = Date, y = T10Y3M, color = "red"))
 plot4
 
 plot5 <- ggplot(data = data) +
@@ -90,9 +90,12 @@ plot9 <- ggplot(data = data) +
   geom_line(aes(x = Date, y = M1change, color = "Blue"))
 plot9
 
-plot10 <- ggplot(data = data) +
-  geom_line(aes(x = Date, y = WEI, color = "Red")) + 
-  geom_line(aes(x = Date, y = SP500change, color = "Blue"))
+plot10 <- ggplot(data = data, aes(x = Date)) +
+  geom_line(aes(y = WEI, colour = 'WEI')) + ylab('percentages') +xlab('Date') +
+  geom_line(aes(y = SP500change, colour = 'SP500change')) + scale_colour_manual('', breaks = c('WEI', 'SP500change'),
+                                                                                          values = c('blue', 'red')) +
+  labs(title = 'The WEI vs S&P500 growth rates')
+  
 plot10
 
 plot11 <- ggplot(data = data) + 
