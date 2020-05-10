@@ -115,9 +115,9 @@ plot7
 
 plot8 <- ggplot(data = data, aes(x = Date)) +
   geom_line(aes(y =WEI, colour = "WEI")) +
-  geom_line(aes(y =BBchange, colour = "BBchange")) + 
+  geom_line(aes(y =BBchange, colour = "Bank borrowings")) + 
   geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
-                                                                    values = c("WEI"="green", "BBchange"="blue")) +
+                                                                    values = c("WEI"="green", "Bank borrowings"="blue")) +
   ggtitle("WEI vs Bank borrowings percentage growth") +
   ylab("WEI and the BB percentage growth")  
 plot8
@@ -156,13 +156,14 @@ plot15 <- ggplot(data = data) +
   geom_line(aes(x = Date, y = sp500_perc_change, color = "lightblue"))
 plot15
 
-plot16 <- ggplot(data = data) + 
-  geom_line(aes(x = Date, y = WEI, color = "darkred")) + 
-  geom_line(aes(x = Date, y = sp500_perc_change, color = "lightblue")) +
-  geom_line(aes(x = Date, y = 0), color = "black") +
-  ggtitle("The WEI vs S&P500 growth rates") +
-  ylab("WEI and S&P500 percentage changes") +
-  theme(legend.position = "none")
+
+plot16 <- ggplot(data = data, aes(x= Date)) + 
+  geom_line(aes(y = WEI, colour = "WEI")) + 
+  geom_line(aes(y = sp500_perc_change, colour = "S&P500")) +
+  geom_hline(yintercept = 0, colour = 'black') + labs(colour = 'Date') + scale_colour_manual("", 
+                                                                    values = c("WEI"="green", "S&P500"="blue")) +
+  ggtitle("The WEI vs S&P500 percentage changes") +
+  ylab("WEI and S&P500 percentage changes") 
 plot16
 
 data[(which.min(data$WEIchange) - 1):(which.min(data$WEIchange) + 1), ]
