@@ -113,19 +113,31 @@ plot6 <- ggplot(data = data) +
 plot6
 
 plot7 <- ggplot(data = data, aes(x = Date)) + 
-  geom_line(aes(y =WEI, colour = "WEI")) +
   geom_line(aes(y = M1change, color = "Money supply")) +
+   geom_line(aes(y =WEI, colour = "WEI"))+
   geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
-                                                                    values = c("WEI"="green", "Money supply"="blue")) +
+                                                                    values = c("Money supply"="blue", "WEI"="green")) +
   ggtitle("WEI vs Money supply percentage change") +
   ylab("WEI and Money supply percentage change") 
 plot7
 
-plot8 <- ggplot(data = data, aes(x = Date)) +
-  geom_line(aes(y =WEI, colour = "WEI")) +
-  geom_line(aes(y =BBchange, colour = "Bank borrowings")) + 
+
+plot8 <- ggplot(data = data[500:600,], aes(x = Date)) +
+  geom_line(aes(y = (SP500_time_series_change) / 50, colour = "absolut")) +
+  geom_line(aes(y = (sp500_perc_change), colour = "perc"))+ 
   geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
-                                                                    values = c("WEI"="green", "Bank borrowings"="blue")) +
+                                                                    values = c("absolut"="blue", "perc"="green")) +
+  ggtitle("WEI vs Bank borrowings percentage change") +
+  ylab("WEI and the BB percentage percentage change")  
+plot8
+
+
+
+plot8 <- ggplot(data = data, aes(x = Date)) +
+  geom_line(aes(y =BBchange, colour = "Bank borrowings")) +
+  geom_line(aes(y =WEI, colour = "WEI"))+ 
+  geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
+                                                                    values = c("Bank borrowings"="blue", "WEI"="green")) +
   ggtitle("WEI vs Bank borrowings percentage change") +
   ylab("WEI and the BB percentage percentage change")  
 plot8
@@ -185,10 +197,38 @@ plot(data$M1, data$WEI)
 plot17 <- ggplot(data = data, aes(x = Date)) + 
   geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
   geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
-  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "green",
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
                                                                                     "S&P500 difference"= "blue")) +
-  ggtitle("Absolute difference within WEI vs S&P500") + ylab("Absolute difference with WEI scaled by 100")
+  ggtitle("Absolute difference within WEI vs S&P500 2008-2020") + ylab("Absolute difference with WEI scaled by 100")
 plot17
+
+plot17_2008_2010 <- ggplot(data = data[1:63,], aes(x = Date)) + 
+  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
+  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
+                                                                                    "S&P500 difference"= "blue")) +
+  ggtitle("Absolute difference within WEI vs S&P500 2008-2010") + ylab("Absolute difference with WEI scaled by 100")
+plot17_2008_2010
+
+plot17_before_covid <- ggplot(data = data[560:630,], aes(x = Date)) + 
+  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
+  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
+                                                                                    "S&P500 difference"= "blue")) +
+  ggtitle("Absolute difference within WEI vs S&P500 before COVID-19") + ylab("Absolute difference with WEI scaled by 100")
+plot17_before_covid
+
+plot17_during_covid <- ggplot(data = data[630:639,], aes(x = Date)) + 
+  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
+  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
+                                                                                    "S&P500 difference"= "blue")) +
+  ggtitle("Absolute difference within WEI vs S&P500 during COVID-2019") + ylab("Absolute difference with WEI scaled by 100")
+plot17_during_covid 
+
+
+
+
 
 plot18 <- ggplot(data = data) + 
   geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
