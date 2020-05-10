@@ -122,17 +122,6 @@ plot7 <- ggplot(data = data, aes(x = Date)) +
 plot7
 
 
-plot8 <- ggplot(data = data[500:600,], aes(x = Date)) +
-  geom_line(aes(y = (SP500_time_series_change) / 50, colour = "absolut")) +
-  geom_line(aes(y = (sp500_perc_change), colour = "perc"))+ 
-  geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
-                                                                    values = c("absolut"="blue", "perc"="green")) +
-  ggtitle("WEI vs Bank borrowings percentage change") +
-  ylab("WEI and the BB percentage percentage change")  
-plot8
-
-
-
 plot8 <- ggplot(data = data, aes(x = Date)) +
   geom_line(aes(y =BBchange, colour = "Bank borrowings")) +
   geom_line(aes(y =WEI, colour = "WEI"))+ 
