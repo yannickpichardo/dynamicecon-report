@@ -80,9 +80,11 @@ plot7 <- ggplot(data = data) +
   geom_line(mapping = aes(x = Date, y = M1change, color = "blue"))
 plot7
 
-plot8 <- ggplot(data = data) +
-  geom_line(aes(x = Date, y = WEI, color = "Red")) +
-  geom_line(aes(x = Date, y = BBchange, color = "Blue"))
+plot8 <- ggplot(data = data, aes(x = Date)) +
+  geom_line(aes(y = WEI, colour = 'WEI')) + ylab('percentages') +xlab('Date') +
+  geom_line(aes(y = BBchange, colour = 'BBchange')) + scale_colour_manual('', breaks = c('WEI', 'BBchange'),
+                                                                        values = c('blue', 'red')) +
+  labs(title = 'The WEI vs Bank borrowings growth rates')
 plot8
 
 plot9 <- ggplot(data = data) +
