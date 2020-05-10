@@ -64,7 +64,7 @@ up2010changewei_vs_changeoil <- ggplot(data = data[1:63,], aes(x = Date)) +
   geom_line(aes(y = WEI_time_series_change*10, color = "WEI difference scaled by 10")) +
   geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
                                                                     values = c("Oil price difference"= "blue", "WEI difference scaled by 10"= "green")) +
-  ggtitle("Difference within WEI vs Oil Price") + ylab("Difference with WEI scaled by 10") 
+  ggtitle("Difference within WEI vs Oil Price 2008-2010") + ylab("Difference with WEI scaled by 10") 
 up2010changewei_vs_changeoil
 
 beforecovchangewei_vs_changeoil <- ggplot(data = data[560:630,], aes(x = Date)) + 
@@ -72,7 +72,7 @@ beforecovchangewei_vs_changeoil <- ggplot(data = data[560:630,], aes(x = Date)) 
   geom_line(aes(y = WEI_time_series_change*10, color = "WEI difference scaled by 10")) +
   geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
                                                                     values = c("Oil price difference"= "blue", "WEI difference scaled by 10"= "green")) +
-  ggtitle("Difference within WEI vs Oil Price") + ylab("Difference with WEI scaled by 10") 
+  ggtitle("Difference within WEI vs Oil Price before COVID-2019") + ylab("Difference with WEI scaled by 10") 
 beforecovchangewei_vs_changeoil
 
 duringcovchangewei_vs_changeoil <- ggplot(data = data[630:639,], aes(x = Date)) + 
@@ -80,12 +80,7 @@ duringcovchangewei_vs_changeoil <- ggplot(data = data[630:639,], aes(x = Date)) 
   geom_line(aes(y = WEI_time_series_change*10, color = "WEI difference scaled by 10")) +
   geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
                                                                     values = c("Oil price difference"= "blue", "WEI difference scaled by 10"= "green")) +
-  ggtitle("Difference within WEI vs Oil Price") + ylab("Difference with WEI scaled by 10") 
+  ggtitle("Difference within WEI vs Oil Price during COVID-2019") + ylab("Difference with WEI scaled by 10") 
 duringcovchangewei_vs_changeoil
 
-duringcovchangewei_vs_changeoil <- ggplot(data = data[630:639,]) + 
-  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
-  geom_line(aes(x = Date, y = Oilperchange/5, color = "lightblue")) + 
-  geom_line(aes(x = Date, y = 0 , color = "green")) +
-  ggtitle("Change in WEI vs Change in Oil Price (After Corona)")
-duringcovchangewei_vs_changeoil
+
