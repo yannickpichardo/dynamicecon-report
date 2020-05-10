@@ -39,7 +39,7 @@ sp500data <- sp500data %>%
   mutate(average_open_close = (Open + Close) / 2)
 
 data <- data %>% cbind(sp500data$average_open_close)
-colnames(data)[20] <- "average_open_close"
+colnames(data)[11] <- "average_open_close"
 
 BBchange <- PercChange(data = data, Var = "BB", NewVar = "BBchange")
 BBchange <- BBchange$BBchange
@@ -77,7 +77,7 @@ plot1 <- ggplot(data = data, mapping = aes(x = BB, y = WEI)) +
             geom_point()
 plot1
 
-plot2 <- ggplot(data = data, mapping = aes(x = T10Y3M, y = wEI)) +
+plot2 <- ggplot(data = data, mapping = aes(x = T10Y3M, y = WEI)) +
             geom_point() 
 plot2
 
@@ -87,7 +87,7 @@ plot3
 
 plot4 <- ggplot(data = data) +
   geom_line(mapping = aes(x = Date, y = WEI), color = "blue") +
-  geom_line(mapping = aes(x = Date, y = T10Y30M, color = "red"))
+  geom_line(mapping = aes(x = Date, y = T10Y3M, color = "red"))
 plot4
 
 plot5 <- ggplot(data = data) +
@@ -113,13 +113,13 @@ plot7 <- ggplot(data = data) +
   theme(legend.position = "none")
 plot7
 
-plot8 <- ggplot(data = data) +
-  geom_line(aes(x = Date, y = WEI, color = "darkred")) +
-  geom_line(aes(x = Date, y = BBchange, color = "lightblue")) + 
-  geom_line(aes(x = Date, y = 0 , color = "black")) + 
-  ggtitle("WEI vs Bank borrowings growth") +
-  ylab("WEI and the BB growth") + 
-  theme(legend.position = 'none')
+plot8 <- ggplot(data = data, aes(x = Date)) +
+  geom_line(aes(y =WEI, colour = "WEI")) +
+  geom_line(aes(y =BBchange, colour = "BBchange")) + 
+  geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
+                                                                    values = c("WEI"="green", "BBchange"="blue")) +
+  ggtitle("WEI vs Bank borrowings percentage growth") +
+  ylab("WEI and the BB percentage growth")  
 plot8
 
 plot9 <- ggplot(data = data) +
