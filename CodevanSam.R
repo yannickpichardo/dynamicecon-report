@@ -71,6 +71,9 @@ WEI_time_series_change <- diff(data$WEI)
 WEI_time_series_change <- append(WEI_time_series_change, 0, after = 0)
 data <- data %>% cbind(WEI_time_series_change)
 
+WEI_difference100 = WEI_time_series_change * 100
+data <- data %>% cbind(WEI_difference100)
+
 SP500_time_series_change <- diff(data$average_open_close)
 SP500_time_series_change <- append(SP500_time_series_change, 0, after = 0)
 data <- data %>% cbind(SP500_time_series_change)
@@ -165,8 +168,7 @@ plot15
 plot16 <- ggplot(data = data, aes(x= Date)) + 
   geom_line(aes(y = WEI, colour = "WEI")) + 
   geom_line(aes(y = sp500_perc_change, colour = "S&P500")) +
-  geom_hline(yintercept = 0, colour = 'black') + labs(colour = 'Date') + scale_colour_manual("", 
-                                                                    values = c("WEI"="green", "S&P500"="blue")) +
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI"="green", "S&P500"="blue")) +
   ggtitle("The WEI vs S&P500 percentage changes") +
   ylab("WEI and S&P500 percentage changes") 
 plot16
@@ -180,11 +182,12 @@ plot(data$BB ,data$WEI)
 plot(data$T10Y3M, data$WEI)
 plot(data$M1, data$WEI)
 
-plot17 <- ggplot(data = data) + 
-  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
-  geom_line(aes(x = Date, y = sp500_perc_change / 5, color = "lightblue")) + 
-  geom_line(aes(x = Date, y = 0 , color = "green")) +
-  ggtitle("Change in WEI vs S&P500 growth rate")
+plot17 <- ggplot(data = data, aes(x = Date)) + 
+  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
+  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "green",
+                                                                                    "S&P500 difference"= "blue")) +
+  ggtitle("Absolute difference within WEI vs S&P500") + ylab("Absolute difference with WEI scaled by 100")
 plot17
 
 plot18 <- ggplot(data = data) + 
