@@ -71,6 +71,11 @@ WEI_time_series_change <- diff(data$WEI)
 WEI_time_series_change <- append(WEI_time_series_change, 0, after = 0)
 data <- data %>% cbind(WEI_time_series_change)
 
+SP500_time_series_change <- diff(data$average_open_close)
+SP500_time_series_change <- append(SP500_time_series_change, 0, after = 0)
+data <- data %>% cbind(SP500_time_series_change)
+
+
 ## Plotting several variables against the WEI to identify some correlation ##
 
 plot1 <- ggplot(data = data, mapping = aes(x = BB, y = WEI)) +
