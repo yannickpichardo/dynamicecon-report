@@ -54,6 +54,13 @@ WEIchange <- WEIchange$WEIchange
 data$WEIchange <- WEIchange
 
 
+#SP500 zorgen dat je een 52 weken percentage change difference neemt, die plotten tegenover WEI zonder veranderingen.
+#Oil price, 52 weken percentage change dan verschillen over 52 weken (misschien doet deze stap te weinig voor verlies aan data, dit zelf bekijken)
+#(vanwege inflatie)
+#midas modellen
+
+
+
 SP500change <- PercChange(data = data, Var = "S&P500", NewVar = "SP500change")
 SP500change <- SP500change$SP500change
 data$SP500change <- SP500change
@@ -114,7 +121,7 @@ plot6
 
 plot7 <- ggplot(data = data, aes(x = Date)) + 
   geom_line(aes(y = M1change, color = "Money supply")) +
-  geom_line(aes(y =WEI, colour = "WEI"))+
+  geom_line(aes(y =WEIchange, colour = "WEI"))+
   geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
                                                                     values = c("Money supply"="blue", "WEI"="green")) +
   ggtitle("WEI vs Money supply percentage change") +
