@@ -45,7 +45,7 @@ autoplot(CCIw)
 autoplot(diff(CCIw))
 
 
-#plotje
+#plotje over de cci vs wei
 data <- read.xlsx("WEI.xlsx", sheet = 2, detectDates = TRUE)
 data$CCIw =as.vector(CCIw) 
 plot <- ggplot(data = data, aes(x = Date)) +
