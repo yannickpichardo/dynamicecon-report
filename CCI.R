@@ -56,6 +56,8 @@ plot <- ggplot(data = data, aes(x = Date)) +
   ggtitle("WEI vs CCI 52 weekly difference") +
   ylab("WEI and CCI 52 weekly difference")  
 plot
-
+acf(diff(CCIw))
 #correlatie
 cor(data$WEI, data$CCIw)
+#acf
+acf(CCIw)
