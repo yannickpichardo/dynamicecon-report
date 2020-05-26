@@ -78,13 +78,6 @@ WEI_time_series_change <- diff(data$WEI)
 WEI_time_series_change <- append(WEI_time_series_change, 0, after = 0)
 data <- data %>% cbind(WEI_time_series_change)
 
-WEI_difference100 = WEI_time_series_change * 100
-data <- data %>% cbind(WEI_difference100)
-
-SP500_time_series_change <- diff(data$average_open_close)
-SP500_time_series_change <- append(SP500_time_series_change, 0, after = 0)
-data <- data %>% cbind(SP500_time_series_change)
-
 
 ## Plotting several variables against the WEI to identify some correlation ##
 
@@ -189,40 +182,6 @@ plot(data$BB ,data$WEI)
 plot(data$T10Y3M, data$WEI)
 plot(data$M1, data$WEI)
 
-plot17 <- ggplot(data = data, aes(x = Date)) + 
-  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
-  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
-  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
-                                                                                    "S&P500 difference"= "blue")) +
-  ggtitle("Difference within WEI vs S&P500 2008-2020") + ylab("Difference with WEI scaled by 100")
-plot17
-
-plot17_2008_2010 <- ggplot(data = data[1:63,], aes(x = Date)) + 
-  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
-  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
-  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
-                                                                                    "S&P500 difference"= "blue")) +
-  ggtitle("Difference within WEI vs S&P500 2008-2010") + ylab("Difference with WEI scaled by 100")
-plot17_2008_2010
-
-plot17_before_covid <- ggplot(data = data[560:630,], aes(x = Date)) + 
-  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
-  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
-  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
-                                                                                    "S&P500 difference"= "blue")) +
-  ggtitle("Difference within WEI vs S&P500 before COVID-19") + ylab("Difference with WEI scaled by 100")
-plot17_before_covid
-
-plot17_during_covid <- ggplot(data = data[630:639,], aes(x = Date)) + 
-  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
-  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
-  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
-                                                                                    "S&P500 difference"= "blue")) +
-  ggtitle("Difference within WEI vs S&P500 during COVID-2019") + ylab("Difference with WEI scaled by 100")
-plot17_during_covid 
-
-
-
 
 
 plot18 <- ggplot(data = data) + 
@@ -238,6 +197,13 @@ plot19 <- ggplot(data = data) +
   geom_line(aes(x = Date, y = 0 , color = "green")) +
   ggtitle("Change in WEI vs M1 growth rate")
 plot19
+
+plot20 <- ggplot(data = data[560:630, ]) + 
+  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
+  geom_line(aes(x = Date, y = diff_oil_price / 10, color = "lightblue")) + 
+  geom_line(aes(x = Date, y = 0 , color = "green")) +
+  ggtitle("diff in WEI vs diff in Oil price")
+plot20
 
 
 ## Gekloot met time series ##
@@ -287,7 +253,7 @@ cor(data[4:11])
 cor(data[-1])
 cor.test(x = data$WEI, y = data$`S&P500`, method=c("pearson", "kendall", "spearman"))
 
-cor_all <- cor(data[4:10]) 
+cor_all <- cor(data[4:8]) 
 corrplot(cor_all, method = "color", na.rm = T)
 
 
