@@ -29,13 +29,17 @@ library('forecast')
 install.packages("tseries")
 
 ## Data manipulation ##
-
+data_1 <- read.xlsx("WEI.xlsx", sheet = 2, detectDates = TRUE)
 data <- read.xlsx("WEI.xlsx", sheet = 2, detectDates = TRUE)
 sp500data <- read.csv("GSPC.csv")
+sp500_newdata <- read.csv("sp500newdata.csv")
 
 sp500data <- sp500data %>% 
   mutate(average_high_low = (High + Low) / 2)
 sp500data <- sp500data %>% 
+  mutate(average_open_close = (Open + Close) / 2)
+
+sp500_newdata <- sp500_newdata %>% 
   mutate(average_open_close = (Open + Close) / 2)
 
 data <- data %>% cbind(sp500data$average_open_close)
@@ -53,6 +57,32 @@ WEIchange <- PercChange(data = data, Var = "WEI", NewVar = 'WEIchange')
 WEIchange <- WEIchange$WEIchange
 data$WEIchange <- WEIchange
 
+
+sp500_52week_change <- PercChange(data = sp500_newdata, Var = "average_open_close", NewVar = "sp500_52week_change", slideBy = -52)
+sp500_52week_change <- sp500_52week_change$sp500_52week_change
+sp500_52week_change <- sp500_52week_change[!is.na(sp500_52week_change)]
+data_1$sp500_52week_change <- sp500_52week_change
+
+sp_500_52week_diff <- diff(sp500_newdata$average_open_close, lag = 52)
+data_1$sp_500_52week_diff <- sp_500_52week_diff
+
+plot240 <- ggplot(data = data_1) + 
+  geom_line(mapping = aes(x = Date, y = sp_500_52week_diff / 100), colour = "red") +
+  geom_line(mapping = aes(x = Date, y = WEI), colour = "blue") + 
+  geom_line(aes(x = Date, y = 0), colour = "black")
+plot240
+
+plot239 <- ggplot(data = data_1) +
+  geom_line(mapping = aes(x = Date, y = sp500_52week_change / 10), colour = "red") + 
+  geom_line(mapping = aes(x = Date, y = WEI), colour = "blue") +
+  geom_hline(yintercept = 0, colour = 'black') + 
+  ggtitle("WEI vs S&P500 52 week percentage change") + 
+  ylab("S&P500 scaled by 10")
+plot239
+
+correlation <- cor(select(data_1, 4:8, 11:12))
+print(correlation)
+corrplot(correlation, method = "color", na.remove = TRUE)
 
 #SP500 zorgen dat je een 52 weken percentage change difference neemt, die plotten tegenover WEI zonder veranderingen.
 #Oil price, 52 weken percentage change dan verschillen over 52 weken (misschien doet deze stap te weinig voor verlies aan data, dit zelf bekijken)
@@ -204,6 +234,57 @@ plot20 <- ggplot(data = data[560:630, ]) +
   geom_line(aes(x = Date, y = 0 , color = "green")) +
   ggtitle("diff in WEI vs diff in Oil price")
 plot20
+
+plot17 <- ggplot(data = data[560:628, ]) + 
+  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
+  geom_line(aes(x = Date, y = SP500_diff_change / 50, color = "lightblue")) + 
+  geom_line(aes(x = Date, y = 0 , color = "green")) +
+  ggtitle("Change in WEI vs S&P500 growth rate")
+plot17
+
+plottest <- ggplot(data = data[560:628, ]) + 
+  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
+  geom_line(aes(x = Date, y = sp500_perc_change / 5, color = "lightblue")) + 
+  geom_line(aes(x = Date, y = 0 , color = "green")) +
+  ggtitle("Change in WEI vs S&P500 growth rate")
+plottest
+
+plothoertje <- ggplot(data = data[500:600, ]) + 
+  geom_line(aes(x = Date, y = sp500_perc_change, color = "darkred")) +
+  geom_line(aes(x = Date, y = SP500_diff_change / 50, color = 'lightblue'))
+plothoertje
+
+  plot17 <- ggplot(data = data, aes(x = Date)) + 
+  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
+  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
+                                                                                    "S&P500 difference"= "blue")) +
+  ggtitle("Difference within WEI vs S&P500 2008-2020") + ylab("Difference with WEI scaled by 100")
+plot21
+
+plot17_2008_2010 <- ggplot(data = data[1:63,], aes(x = Date)) + 
+  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
+  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
+                                                                                    "S&P500 difference"= "blue")) +
+  ggtitle("Difference within WEI vs S&P500 2008-2010") + ylab("Difference with WEI scaled by 100")
+plot17_2008_2010
+
+plot17_before_covid <- ggplot(data = data[560:630,], aes(x = Date)) + 
+  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
+  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
+                                                                                    "S&P500 difference"= "blue")) +
+  ggtitle("Difference within WEI vs S&P500 before COVID-19") + ylab("Difference with WEI scaled by 100")
+plot17_before_covid
+
+plot17_during_covid <- ggplot(data = data[630:639,], aes(x = Date)) + 
+  geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
+  geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("WEI difference scaled by 100"= "red",
+                                                                                    "S&P500 difference"= "blue")) +
+  ggtitle("Difference within WEI vs S&P500 during COVID-2019") + ylab("Difference with WEI scaled by 100")
+plot17_during_covid 
 
 
 ## Gekloot met time series ##
