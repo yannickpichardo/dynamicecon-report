@@ -39,7 +39,7 @@ sp500data <- sp500data %>%
   mutate(average_open_close = (Open + Close) / 2)
 
 data <- data %>% cbind(sp500data$average_open_close)
-colnames(data)[20] <- "average_open_close"
+colnames(data)[11] <- "average_open_close"
 
 BBchange <- PercChange(data = data, Var = "BB", NewVar = "BBchange")
 BBchange <- BBchange$BBchange
@@ -52,6 +52,13 @@ data$M1change <- M1change
 WEIchange <- PercChange(data = data, Var = "WEI", NewVar = 'WEIchange')
 WEIchange <- WEIchange$WEIchange
 data$WEIchange <- WEIchange
+
+
+#SP500 zorgen dat je een 52 weken percentage change difference neemt, die plotten tegenover WEI zonder veranderingen.
+#Oil price, 52 weken percentage change dan verschillen over 52 weken (misschien doet deze stap te weinig voor verlies aan data, dit zelf bekijken)
+#(vanwege inflatie)
+#midas modellen
+
 
 
 SP500change <- PercChange(data = data, Var = "S&P500", NewVar = "SP500change")
@@ -71,34 +78,24 @@ WEI_time_series_change <- diff(data$WEI)
 WEI_time_series_change <- append(WEI_time_series_change, 0, after = 0)
 data <- data %>% cbind(WEI_time_series_change)
 
-print(data$sp500_perc_change)
-SP500_diff_change <- diff(data$average_open_close)
-SP500_diff_change <- append(SP500_diff_change, 0, after = 0)
-data$SP500_diff_change <- SP500_diff_change
-
-diff_oil_price <- diff(data$Oil)
-diff_oil_price <- append(diff_oil_price, 0, after = 0)
-data$diff_oil_price <- diff_oil_price
-
-plot(x = data$Date, y =  data$WEI_time_series_change, type = 'l')
 
 ## Plotting several variables against the WEI to identify some correlation ##
 
 plot1 <- ggplot(data = data, mapping = aes(x = BB, y = WEI)) +
-            geom_point()
+  geom_point()
 plot1
 
-plot2 <- ggplot(data = data, mapping = aes(x = T10Y3M, y = wEI)) +
-            geom_point() 
+plot2 <- ggplot(data = data, mapping = aes(x = T10Y3M, y = WEI)) +
+  geom_point() 
 plot2
 
 plot3 <- ggplot(data = data, mapping = aes(x = M1, y = WEI)) +
-            geom_point()
+  geom_point()
 plot3
 
 plot4 <- ggplot(data = data) +
   geom_line(mapping = aes(x = Date, y = WEI), color = "blue") +
-  geom_line(mapping = aes(x = Date, y = T10Y30M, color = "red"))
+  geom_line(mapping = aes(x = Date, y = T10Y3M, color = "red"))
 plot4
 
 plot5 <- ggplot(data = data) +
@@ -115,22 +112,22 @@ plot6 <- ggplot(data = data) +
   geom_line(aes(x = Date, y = lnM1, color = "white"))
 plot6
 
-plot7 <- ggplot(data = data) + 
-  geom_line(aes(x = Date, y = WEI, color = "darkred")) +
-  geom_line(aes(x = Date, y = M1change, color = "lightblue")) +
-  geom_line(aes(x = Date, y = 0, color = "black")) +
-  ggtitle("WEI vs Money supply growth") +
-  ylab("WEI and the M1 growth") + 
-  theme(legend.position = "none")
+plot7 <- ggplot(data = data, aes(x = Date)) + 
+  geom_line(aes(y = M1change, color = "Money supply")) +
+  geom_line(aes(y =WEIchange, colour = "WEI"))+
+  geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
+                                                                    values = c("Money supply"="blue", "WEI"="green")) +
+  ggtitle("WEI vs Money supply percentage change") +
+  ylab("WEI and Money supply percentage change") 
 plot7
 
-plot8 <- ggplot(data = data) +
-  geom_line(aes(x = Date, y = WEI, color = "darkred")) +
-  geom_line(aes(x = Date, y = BBchange, color = "lightblue")) + 
-  geom_line(aes(x = Date, y = 0 , color = "black")) + 
-  ggtitle("WEI vs Bank borrowings growth") +
-  ylab("WEI and the BB growth") + 
-  theme(legend.position = 'none')
+plot8 <- ggplot(data = data, aes(x = Date)) +
+  geom_line(aes(y =BBchange, colour = "Bank borrowings")) +
+  geom_line(aes(y =WEI, colour = "WEI"))+ 
+  geom_hline(yintercept = 0, color = 'black') + scale_colour_manual("", 
+                                                                    values = c("Bank borrowings"="blue", "WEI"="green")) +
+  ggtitle("WEI vs Bank borrowings percentage change") +
+  ylab("WEI and the BB percentage percentage change")  
 plot8
 
 plot9 <- ggplot(data = data) +
@@ -167,13 +164,13 @@ plot15 <- ggplot(data = data) +
   geom_line(aes(x = Date, y = sp500_perc_change, color = "lightblue"))
 plot15
 
-plot16 <- ggplot(data = data) + 
-  geom_line(aes(x = Date, y = WEI, color = "darkred")) + 
-  geom_line(aes(x = Date, y = sp500_perc_change, color = "lightblue")) +
-  geom_line(aes(x = Date, y = 0), color = "black") +
-  ggtitle("The WEI vs S&P500 growth rates") +
-  ylab("WEI and S&P500 percentage changes") +
-  theme(legend.position = "none")
+
+plot16 <- ggplot(data = data, aes(x= Date)) + 
+  geom_line(aes(y = sp500_perc_change, colour = "S&P500")) + 
+  geom_line(aes(y = WEI, colour = "WEI")) +
+  geom_hline(yintercept = 0, colour = 'black') + scale_colour_manual("", values = c("S&P500"="blue", "WEI"="green")) +
+  ggtitle("The WEI vs S&P500 percentage changes") +
+  ylab("WEI and S&P500 percentage changes") 
 plot16
 
 data[(which.min(data$WEIchange) - 1):(which.min(data$WEIchange) + 1), ]
@@ -185,24 +182,7 @@ plot(data$BB ,data$WEI)
 plot(data$T10Y3M, data$WEI)
 plot(data$M1, data$WEI)
 
-plot17 <- ggplot(data = data[560:628, ]) + 
-  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
-  geom_line(aes(x = Date, y = SP500_diff_change / 50, color = "lightblue")) + 
-  geom_line(aes(x = Date, y = 0 , color = "green")) +
-  ggtitle("Change in WEI vs S&P500 growth rate")
-plot17
 
-plottest <- ggplot(data = data[560:628, ]) + 
-  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
-  geom_line(aes(x = Date, y = sp500_perc_change / 5, color = "lightblue")) + 
-  geom_line(aes(x = Date, y = 0 , color = "green")) +
-  ggtitle("Change in WEI vs S&P500 growth rate")
-plottest
-
-plothoertje <- ggplot(data = data[500:600, ]) + 
-  geom_line(aes(x = Date, y = sp500_perc_change, color = "darkred")) +
-  geom_line(aes(x = Date, y = SP500_diff_change / 50, color = 'lightblue'))
-plothoertje
 
 plot18 <- ggplot(data = data) + 
   geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
@@ -308,4 +288,3 @@ summary(model5)
 ?acf
 acf(data$sp500_perc_change, na.action = na.pass)
 pacf(data$sp500_perc_change, na.action = na.pass)
-
