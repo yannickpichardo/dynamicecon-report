@@ -71,6 +71,17 @@ WEI_time_series_change <- diff(data$WEI)
 WEI_time_series_change <- append(WEI_time_series_change, 0, after = 0)
 data <- data %>% cbind(WEI_time_series_change)
 
+print(data$sp500_perc_change)
+SP500_diff_change <- diff(data$average_open_close)
+SP500_diff_change <- append(SP500_diff_change, 0, after = 0)
+data$SP500_diff_change <- SP500_diff_change
+
+diff_oil_price <- diff(data$Oil)
+diff_oil_price <- append(diff_oil_price, 0, after = 0)
+data$diff_oil_price <- diff_oil_price
+
+plot(x = data$Date, y =  data$WEI_time_series_change, type = 'l')
+
 ## Plotting several variables against the WEI to identify some correlation ##
 
 plot1 <- ggplot(data = data, mapping = aes(x = BB, y = WEI)) +
@@ -174,12 +185,24 @@ plot(data$BB ,data$WEI)
 plot(data$T10Y3M, data$WEI)
 plot(data$M1, data$WEI)
 
-plot17 <- ggplot(data = data) + 
+plot17 <- ggplot(data = data[560:628, ]) + 
+  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
+  geom_line(aes(x = Date, y = SP500_diff_change / 50, color = "lightblue")) + 
+  geom_line(aes(x = Date, y = 0 , color = "green")) +
+  ggtitle("Change in WEI vs S&P500 growth rate")
+plot17
+
+plottest <- ggplot(data = data[560:628, ]) + 
   geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
   geom_line(aes(x = Date, y = sp500_perc_change / 5, color = "lightblue")) + 
   geom_line(aes(x = Date, y = 0 , color = "green")) +
   ggtitle("Change in WEI vs S&P500 growth rate")
-plot17
+plottest
+
+plothoertje <- ggplot(data = data[500:600, ]) + 
+  geom_line(aes(x = Date, y = sp500_perc_change, color = "darkred")) +
+  geom_line(aes(x = Date, y = SP500_diff_change / 50, color = 'lightblue'))
+plothoertje
 
 plot18 <- ggplot(data = data) + 
   geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
@@ -194,6 +217,13 @@ plot19 <- ggplot(data = data) +
   geom_line(aes(x = Date, y = 0 , color = "green")) +
   ggtitle("Change in WEI vs M1 growth rate")
 plot19
+
+plot20 <- ggplot(data = data[560:630, ]) + 
+  geom_line(aes(x = Date, y = WEI_time_series_change, color = "darkred")) + 
+  geom_line(aes(x = Date, y = diff_oil_price / 10, color = "lightblue")) + 
+  geom_line(aes(x = Date, y = 0 , color = "green")) +
+  ggtitle("diff in WEI vs diff in Oil price")
+plot20
 
 
 ## Gekloot met time series ##
@@ -243,7 +273,7 @@ cor(data[4:11])
 cor(data[-1])
 cor.test(x = data$WEI, y = data$`S&P500`, method=c("pearson", "kendall", "spearman"))
 
-cor_all <- cor(data[4:10]) 
+cor_all <- cor(data[4:8]) 
 corrplot(cor_all, method = "color", na.rm = T)
 
 
