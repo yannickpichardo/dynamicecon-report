@@ -96,18 +96,35 @@ CCIw         <- ts(CCIw,start = 2008,frequency=52)
 data_1$CCIw =as.vector(CCIw) 
 
 #preparing all time series
+WEI_365       <- ts(data_1$WEI, decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+CCIw_365       <- ts(data_1$CCIw, decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+sp500_52week_change_365        <- ts(data_1$sp500_52week_change, decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+sp_500_52week_diff_365       <- ts(data_1$sp_500_52week_diff, decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+
 WEI       <- ts(data_1$WEI, decimal_date(ymd("2008-01-05")), frequency = 52)
 CCIw       <- ts(data_1$CCIw, decimal_date(ymd("2008-01-05")), frequency = 52)
-sp500_52week_change       <- ts(data_1$sp500_52week_change, decimal_date(ymd("2008-01-05")), frequency = 52)
-sp_500_52week_diff      <- ts(data_1$sp_500_52week_diff, decimal_date(ymd("2008-01-05")), frequency = 52)
+sp500_52week_change        <- ts(data_1$sp500_52week_change, decimal_date(ymd("2008-01-05")), frequency = 52)
+sp_500_52week_diff       <- ts(data_1$sp_500_52week_diff, decimal_date(ymd("2008-01-05")), frequency = 52)
+
 
 #forecasting with arma
 fit_1 <- Arima(WEI, order = c(2,0,3))
 fARMA_1 <- forecast(fit_1,h=200)
 autoplot(fARMA_1)
 
+fit_2 <- Arima(WEI, order = c(5,0,4)) #figure 5
+fARMA_2 <- forecast(fit_2,h=200)
+autoplot(fARMA_2)
+
+fit_3 = Arima(WEI, order = c(52,0,3), fixed=c(NA,NA,0,0,0,0,0,
+                                              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                                              0,0,0,0,0,0,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA))
+fARMA_3 <- forecast(fit_3,h=200)
+autoplot(fARMA_3)
+
+
 #forecasting with VAR
-Y <- cbind(WEI, CCIw, sp_500_52week_diff)
+Y <- cbind(WEI_365, CCIw_365, sp_500_52week_diff_365)
 VAR4 <- VAR(Y,p=4,type = c('const'))
 fVAR4 <- forecast(VAR4, h=200)
 autoplot(fVAR4$forecast$WEI)
@@ -123,7 +140,7 @@ summ<-summary(ARDL4)
 print(summ$coefficients,digits=1)
 
 
-Y <- cbind(WEI, CCIw, sp_500_52week_diff)
+Y <- cbind(WEI_365, CCIw_365, sp_500_52week_diff_365)
 VAR4 <- VAR(Y,p=4,type = c('const'))
 corder1  <- order(names(VAR4$varresult$WEI$coefficients))
 corder2  <- order(names(summ$coefficients[,1]))
@@ -131,15 +148,14 @@ coefVAR  <- cbind(VAR4$varresult$WEI$coefficients[corder1],
                   summ$coefficients[corder2])
 colnames(coefVAR)<- c("VAR(4)","ARDL(4,4)")
 
-print(coefVAR,digits=1)
+print(coefVAR,digits=3)
 
-#in and out of sample
+#in and out of sample ARMA
 es     <- as.Date("2008/1/5") # Estimation start
 fs     <- as.Date("2016/1/2") # First forecast 
 fe     <- as.Date("2020/2/1")# Final forecast
-cs     <- c(2008,1)           # Starting date for crisis period analysis
-ce     <- c(2012,4)           # End date for crisis period analysis
-maxARp <- 4 # Consider AR(p) models with p=1,...,maxARlag
+
+maxARp <- 6 # Consider AR(p) models with p=1,...,maxARlag
 
 # Helper function to get dates into helpful format c(yr,qtr)
 convert_date <- function(date){
@@ -147,6 +163,22 @@ convert_date <- function(date){
     ceiling(as.numeric(format(date,'%W')))) 
   # Use %W for weeks and do not divide by 3.
 }
+
+
+# TEST IF LOOP IS WRONG OR CODE IN LOOP
+#dates   <- seq(fs,fe,by="week")
+#qF      <- convert_date(fs)
+#qL      <- convert_date(fe)
+#target  <- window(WEI,start=qF,end=qL)
+#est   <- seq(dates[20],length=40+1, by = "-1 week")[40+1]
+#yest = window(WEI,end=convert_date(est))
+#fit <- Arima(yest,order=c(3,0,0))
+#fc    <- ts(data=matrix(NA,length(dates),3),start=qF,frequency=365.25/7)
+#fce   <- ts(data=matrix(NA,length(dates),3),start=qF,frequency=365.25/7)
+#fc[20,3] <- forecast(fit,h=40)$mean[40]
+#fc
+#fce[20,3]     <- fc[20,3]-target[20]
+#fce
 
 forecastARMA <- function(y,es,fs,fe,maxARp,hor){
   dates   <- seq(fs,fe,by="week") # (or "week"...)
@@ -157,16 +189,16 @@ forecastARMA <- function(y,es,fs,fe,maxARp,hor){
   
   # Define ts objects where forecasts/forecast errors are saved.
   # (Note that frequency=4 applies to quarterly data!)
-  fc    <- ts(data=matrix(NA,n,maxARp),start=qF,end=qL,frequency=52)
-  fce   <- ts(data=matrix(NA,n,maxARp),start=qF,end=qL,frequency=52)
+  fc    <- ts(data=matrix(NA,n,maxARp),start=qF,frequency=365.25/7)
+  fce   <- ts(data=matrix(NA,n,maxARp),start=qF,frequency=365.25/7)
   
   for (i_d in seq(1,n)){
     # Define estimation sample (ends h periods before 1st forecast)
     # Start at the first forecast date, 
     # Then move back h+1 quarters back in time
-    est   <- seq(dates[i_d],length=hor+1, by = "-1 quarter")[hor+1]
+    est   <- seq(dates[i_d],length=hor+1, by = "-1 week")[hor+1]
     # Now define the data we can use to estimate the model
-    yest  <- window(y,start=convert_date(es),end=convert_date(est))
+    yest  <- window(y,end=convert_date(est))
     # Fit the AR models using Arima
     for (j in seq(1,maxARp)){
       fit            <- Arima(yest,order=c(j,0,0))   #Fit model
@@ -181,19 +213,120 @@ forecastARMA <- function(y,es,fs,fe,maxARp,hor){
   return(results)
 }
 
-h_all     <- c(12,26,52)      # Which horizons to consider
+#fcARMA             <- forecastARMA(WEI,es,fs,fe,maxARp,h_all[1])
+#fcARMA
+#mseARMA[1,] = colMeans(fcARMA$fce^2, na.rm = T)
+#mseARMA
+h_all     <- c(26,52,200)      # Which horizons to consider
 lh        <- length(h_all)
 mseARMA   <- matrix(NA,lh,maxARp) # Full sample
-mseARMAc  <- matrix(NA,lh,maxARp) # Crisis only
 for (i in seq(1,lh)){
   fcARMA             <- forecastARMA(WEI,es,fs,fe,maxARp,h_all[i])
-  mseARMA[i,]    <- colMeans(fcARMA$fce^2)
-  # Focusing on the crisis period
-  crisis             <- window(WEI$fce,start=cs,end=ce)
-  mseARMAc[i,]   <- colMeans(crisis^2)
+  mseARMA[i,]    <- colMeans(fcARMA$fce^2, na.rm = T)
 }
-colnames(mseARMA)  <- c("AR(1)","AR(2)","AR(3)","AR(4)")
-rownames(mseARMA)  <- c("1-step","4-step","12-step")
-colnames(mseARMAc) <- c("AR(1)","AR(2)","AR(3)","AR(4)")
-rownames(mseARMAc) <- c("1-step","4-step","12-step")
+colnames(mseARMA)  <- c("AR(1)","AR(2)","AR(3)","AR(4)","AR(5)","AR(6)")
+rownames(mseARMA)  <- c("12-step","26-step","52-step")
+
+mseARMA
+
+#in and out of sample ARDL
+
+forecastARMA <- function(y,X,es,fs,fe,maxARp,hor){
+  dates   <- seq(fs,fe,by="week") # (or "week"...)
+  n       <- length(dates)                 # number of forecasts
+  qF      <- convert_date(fs)
+  qL      <- convert_date(fe)
+  target  <- window(y,start=qF,end=qL)     # What we are forecasting.
+  
+  # Define ts objects where forecasts/forecast errors are saved.
+  # (Note that frequency=4 applies to quarterly data!)
+  fc    <- ts(data=matrix(NA,n,maxARp),start=qF,frequency=365.25/7)
+  fce   <- ts(data=matrix(NA,n,maxARp),start=qF,frequency=365.25/7)
+  
+  for (i_d in seq(1,n)){
+    # Define estimation sample (ends h periods before 1st forecast)
+    # Start at the first forecast date, 
+    # Then move back h+1 quarters back in time
+    est   <- seq(dates[i_d],length=hor+1, by = "-1 week")[hor+1]
+    # Now define the data we can use to estimate the model
+    Y = cbind(y,X)
+    Yest  <- window(Y,end=convert_date(est))
+    # Fit the AR models using Arima
+    for (j in seq(1,maxARp)){
+      fit            <- VAR(Yest,p=j,type=c('const'))   #Fit model
+      fc[i_d,j]      <- forecast(fit,h=hor)$forecast$y$mean[hor]#Get forecast
+      fce[i_d,j]     <- fc[i_d,j]-target[i_d]        #Get forecast error
+    }
+  }
+  results         <- list()
+  results$fc      <- fc
+  results$fce     <- fce
+  results$target  <- target
+  return(results)
+}
+
+# Get forecasts
+X_SP <- cbind(WEI_365,sp_500_52week_diff_365)
+X_CCI <- cbind(WEI_365,CCIw_365)
+fcARDLh1_SP  <- forecastARDL(WEI_365,X_SP,es,fs,fe,maxARp,1)
+fcARDLh1_CCI  <- forecastARDL(WEI_365,X_CCI,es,fs,fe,maxARp,1)
+
+# Calculate MSE and compare
+mseARDL_SP     <- colMeans(fcARDLh1_SP$fce^2)
+mseARDL_CCI     <- colMeans(fcARDLh1_CCI$fce^2)
+compare_SP     <- rbind(mseARMA[1,],mseARDL_SP)
+compare_CCI     <- rbind(mseARMA[1,],mseARDL_CCI)
+rownames(compare_SP) <- c("AR","ARDL")
+colnames(compare_SP) <- c("p=1","p=2","p=3","p=4",'p=5','p=6')
+rownames(compare_CCI) <- c("AR","ARDL")
+colnames(compare_CCI) <- c("p=1","p=2","p=3","p=4",'p=5','p=6')
+round(compare_SP,digits=3)
+round(compare_CCI,digits=3)
+
+
+#IRF analysis
+Y           <- cbind(CCIw_365, sp_500_52week_diff_365, WEI_365)
+colnames(Y) <- c('CCI', 'SP500', 'WEI' )
+VARmodel    <- VAR(Y,p=6,type=c("const"))
+roots(VARmodel) # computes eigenvalues of companion matrix
+
+irf_WEI <- irf(VARmodel,impulse=c("SP500"),
+               response=c("WEI"),ortho=T)
+plot(irf_WEI,plot.type=c("single"))
+
+irf_CCI <- irf(VARmodel,impulse=c("SP500"),
+               response=c("CCI"),ortho=T)
+plot(irf_CCI,plot.type=c("single"))
+
+irf_WEI_CCI <- irf(VARmodel,impulse=c("CCI"),
+               response=c("WEI"),ortho=T)
+plot(irf_WEI_CCI,plot.type=c("single"))
+
+
+Y           <- cbind(CCIw_365, sp_500_52week_diff_365, WEI_365)
+colnames(Y) <- c('CCI', 'SP500', 'WEI')
+VARmodel_ic <- VARselect(Y,type=c("const"),lag.max=8)
+ic          <- as.data.frame(t(VARmodel_ic$criteria))
+ic
+ggplot(data=ic, aes(x=seq(1,8),y=`SC(n)`))+geom_line()+ylab("BIC")+xlab("VAR(p)")
+ggplot(data=ic, aes(x=seq(1,8),y=`AIC(n)`))+geom_line()+ylab("AIC")+xlab("VAR(p)")
+
+
+#restricted VAR
+p        <- 6;
+VARr     <- VAR(Y,p=6,type=c("const"))
+nseries  <- 3;
+mones    <- matrix(1,nrow = nseries,ncol=nseries) 
+mzero    <- matrix(0,nrow = nseries,ncol=nseries) 
+vones    <- matrix(1,nrow = nseries,ncol=1)
+restrict <- cbind(mones,mones,mzero,mones,mzero,mones,vones) # order is: lag 1, ..., lag p and then the constant
+VARr     <- restrict(VAR4, method = "man", resmat = restrict)
+
+# Somehow BIC has to be calculated by hand
+resid    <- residuals(VARr)
+T        <- length(resid[,1])
+BIC      <- log(det(t(resid)%*%resid/T)) + (log(T)/T)*sum(restrict)
+
+# You can check that now the third lag is omitted by typing
+summary(VARr)
 
