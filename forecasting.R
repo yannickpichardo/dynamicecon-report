@@ -134,8 +134,8 @@ VAR4$varresult$WEI$coefficients
 autoplot(fARMA_1$mean,series="ARMA(2,3)")+ autolayer(fVAR4$forecast$WEI,series="VAR(4)")+labs(y="WEI")
 
 #ARDL model
-ARDL4 <- dynlm(WEI ~L(WEI,(1:4)) +
-                 L(CCIw,(1:4))+L(sp_500_52week_diff,(1:4)))
+ARDL4 <- dynlm(WEI_365 ~L(WEI_365,(1:4)) +
+                 L(CCIw_365,(1:4))+L(sp_500_52week_diff_365,(1:4)))
 summ<-summary(ARDL4)
 print(summ$coefficients,digits=1)
 
@@ -146,7 +146,7 @@ corder1  <- order(names(VAR4$varresult$WEI$coefficients))
 corder2  <- order(names(summ$coefficients[,1]))
 coefVAR  <- cbind(VAR4$varresult$WEI$coefficients[corder1],
                   summ$coefficients[corder2])
-colnames(coefVAR)<- c("VAR(4)","ARDL(4,4)")
+colnames(coefVAR)<- c("VAR(4)","ARDL(4,4,4)")
 
 print(coefVAR,digits=3)
 
@@ -213,6 +213,9 @@ forecastARMA <- function(y,es,fs,fe,maxARp,hor){
   return(results)
 }
 
+
+
+
 #fcARMA             <- forecastARMA(WEI,es,fs,fe,maxARp,h_all[1])
 #fcARMA
 #mseARMA[1,] = colMeans(fcARMA$fce^2, na.rm = T)
@@ -225,13 +228,13 @@ for (i in seq(1,lh)){
   mseARMA[i,]    <- colMeans(fcARMA$fce^2, na.rm = T)
 }
 colnames(mseARMA)  <- c("AR(1)","AR(2)","AR(3)","AR(4)","AR(5)","AR(6)")
-rownames(mseARMA)  <- c("12-step","26-step","52-step")
+rownames(mseARMA)  <- c("26-step","52-step","200-step")
 
 mseARMA
 
 #in and out of sample ARDL
 
-forecastARMA <- function(y,X,es,fs,fe,maxARp,hor){
+forecastARDL <- function(y,X,es,fs,fe,maxARp,hor){
   dates   <- seq(fs,fe,by="week") # (or "week"...)
   n       <- length(dates)                 # number of forecasts
   qF      <- convert_date(fs)
@@ -287,19 +290,21 @@ round(compare_CCI,digits=3)
 #IRF analysis
 Y           <- cbind(CCIw_365, sp_500_52week_diff_365, WEI_365)
 colnames(Y) <- c('CCI', 'SP500', 'WEI' )
-VARmodel    <- VAR(Y,p=6,type=c("const"))
+VARmodel    <- VAR(Y,p=4,type=c("const"))
 roots(VARmodel) # computes eigenvalues of companion matrix
 
+
+
 irf_WEI <- irf(VARmodel,impulse=c("SP500"),
-               response=c("WEI"),ortho=T)
+               response=c("WEI"),ortho=T, n.ahead = 30)
 plot(irf_WEI,plot.type=c("single"))
 
 irf_CCI <- irf(VARmodel,impulse=c("SP500"),
-               response=c("CCI"),ortho=T)
+               response=c("CCI"),ortho=T, n.ahead = 30)
 plot(irf_CCI,plot.type=c("single"))
 
 irf_WEI_CCI <- irf(VARmodel,impulse=c("CCI"),
-               response=c("WEI"),ortho=T)
+               response=c("WEI"),ortho=T, n.ahead = 30)
 plot(irf_WEI_CCI,plot.type=c("single"))
 
 
@@ -320,13 +325,30 @@ mones    <- matrix(1,nrow = nseries,ncol=nseries)
 mzero    <- matrix(0,nrow = nseries,ncol=nseries) 
 vones    <- matrix(1,nrow = nseries,ncol=1)
 restrict <- cbind(mones,mones,mzero,mones,mzero,mones,vones) # order is: lag 1, ..., lag p and then the constant
-VARr     <- restrict(VAR4, method = "man", resmat = restrict)
+VARr     <- restrict(VARr, method = "man", resmat = restrict)
 
 # Somehow BIC has to be calculated by hand
 resid    <- residuals(VARr)
 T        <- length(resid[,1])
 BIC      <- log(det(t(resid)%*%resid/T)) + (log(T)/T)*sum(restrict)
-
+BIC
 # You can check that now the third lag is omitted by typing
 summary(VARr)
+
+Ftest <- matrix(NA,4,2)
+lags <- 4 # number of lags
+nvar <- 3 # number of variables
+for (i in seq(4)){
+  y    <- ardl.list[[i]]$residuals
+  T    <- length(y)
+  # Fit ARDL models with and without lags of y
+  fit1 <- dynlm(y ~ L(y,(1:lags)) + L(dgnp_T,(1:i)) + L(ddef_T,(1:i)) + L(ffr_T,(1:i)))
+  fit2 <- dynlm(y ~                 L(dgnp_T,(1:i)) + L(ddef_T,(1:i)) + L(ffr_T,(1:i)))
+  SSR1 <- sum(fit1$residuals^2)
+  SSR0 <- sum(fit2$residuals^2)
+  Ftest[i,1] <- ((SSR0-SSR1)/lags)/(SSR1/(T-lags-nvar*i))
+  Ftest[i,2] <- qf(0.95,lags,T-lags-nvar*i)
+}
+print(Ftest)
+
 
