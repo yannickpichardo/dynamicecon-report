@@ -288,8 +288,8 @@ round(compare_CCI,digits=3)
 
 
 #IRF analysis
-Y           <- cbind(CCIw_365, sp_500_52week_diff_365, WEI_365)
-colnames(Y) <- c('CCI', 'SP500', 'WEI' )
+Y           <- cbind(sp_500_52week_diff_365, CCIw_365,  WEI_365)
+colnames(Y) <- c('SP500', 'CCI', 'WEI' )
 VARmodel    <- VAR(Y,p=4,type=c("const"))
 roots(VARmodel) # computes eigenvalues of companion matrix
 
