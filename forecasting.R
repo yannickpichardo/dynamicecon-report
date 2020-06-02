@@ -97,33 +97,35 @@ WEI_365       <- ts(data_1$WEI, decimal_date(ymd("2008-01-05")), frequency = 365
 CCIw_365       <- ts(data_1$CCIw, decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
 sp500_52week_change_365        <- ts(data_1$sp500_52week_change, decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
 sp_500_52week_diff_365       <- ts(data_1$sp_500_52week_diff, decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+noise<-ts(rnorm(length(CCIw_365))*sqrt(sd((CCIw_365)/100)),decimal_date(ymd("2008-01-05")),frequency=365.25/7)
+CCIn <- CCIw_365+noise
 
-WEI       <- ts(data_1$WEI, decimal_date(ymd("2008-01-05")), frequency = 52)
-CCIw       <- ts(data_1$CCIw, decimal_date(ymd("2008-01-05")), frequency = 52)
-sp500_52week_change        <- ts(data_1$sp500_52week_change, decimal_date(ymd("2008-01-05")), frequency = 52)
-sp_500_52week_diff       <- ts(data_1$sp_500_52week_diff, decimal_date(ymd("2008-01-05")), frequency = 52)
+#WEI       <- ts(data_1$WEI, decimal_date(ymd("2008-01-05")), frequency = 52)
+#CCIw       <- ts(data_1$CCIw, decimal_date(ymd("2008-01-05")), frequency = 52)
+#sp500_52week_change        <- ts(data_1$sp500_52week_change, decimal_date(ymd("2008-01-05")), frequency = 52)
+#sp_500_52week_diff       <- ts(data_1$sp_500_52week_diff, decimal_date(ymd("2008-01-05")), frequency = 52)
 
 
 #forecasting with arma
-fit_1 <- Arima(WEI, order = c(2,0,3), method = 'ML')
-fARMA_1 <- forecast(fit_1,h=200)
-autoplot(fARMA_1)
+fit_1 <- Arima(WEI_365, order = c(2,0,3))
+fARMA_1 <- forecast(fit_1,h=208)
+autoplot(fARMA_1) 
 
 fit_2 <- Arima(WEI, order = c(5,0,4)) #figure 5
-fARMA_2 <- forecast(fit_2,h=200)
+fARMA_2 <- forecast(fit_2,h=208)
 autoplot(fARMA_2)
 
 fit_3 = Arima(WEI, order = c(52,0,3), fixed=c(NA,NA,0,0,0,0,0,
                                               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
                                               0,0,0,0,0,0,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA))
-fARMA_3 <- forecast(fit_3,h=200)
+fARMA_3 <- forecast(fit_3,h=208)
 autoplot(fARMA_3)
 
 
 #forecasting with VAR
-Y <- cbind(WEI_365, CCIw_365, sp500_52week_change_365 )
+Y <- cbind(WEI_365, CCIn, sp500_52week_change_365 )
 VAR4 <- VAR(Y,p=3,type = c('const'))
-fVAR4 <- forecast(VAR4, h=200)
+fVAR4 <- forecast(VAR4, h=208)
 autoplot(fVAR4$forecast$WEI)
 VAR4$varresult$WEI$coefficients
 
@@ -216,7 +218,7 @@ forecastARMA <- function(y,es,fs,fe,maxARp,hor){
 #fcARMA
 #mseARMA[1,] = colMeans(fcARMA$fce^2, na.rm = T)
 #mseARMA
-h_all     <- c(26,52,200)      # Which horizons to consider
+h_all     <- c(26,52,100)      # Which horizons to consider
 lh        <- length(h_all)
 mseARMA   <- matrix(NA,lh,maxARp) # Full sample
 for (i in seq(1,lh)){
@@ -227,6 +229,71 @@ colnames(mseARMA)  <- c("AR(1)","AR(2)","AR(3)","AR(4)","AR(5)","AR(6)")
 rownames(mseARMA)  <- c("26-step","52-step","200-step")
 
 mseARMA
+
+#MSE of the ARMA models
+es     <- as.Date("2008/1/5") # Estimation start
+fs     <- as.Date("2016/1/2") # First forecast 
+fe     <- as.Date("2020/2/1")# Final forecast
+
+convert_date <- function(date){
+  c(as.numeric(format(date,'%Y')),
+    ceiling(as.numeric(format(date,'%W')))) 
+  # Use %W for weeks and do not divide by 3.
+}
+
+dates   <- seq(fs,fe,by="week") # (or "week"...)
+n       <- length(dates)                 # number of forecasts
+qF      <- convert_date(fs)
+qL      <- convert_date(fe)
+target  <- window(WEI_365,start=qF,end=qL)
+
+in_out_ARMA = function(hor, p, q){
+  fc    <- ts(data=matrix(NA,n,1),start=qF,frequency=365.25/7)
+  fce   <- ts(data=matrix(NA,n,1),start=qF,frequency=365.25/7)
+  
+  for (i_d in seq(1,n)){
+    # Define estimation sample (ends h periods before 1st forecast)
+    # Start at the first forecast date, 
+    # Then move back h+1 quarters back in time
+    est   <- seq(dates[i_d],length=hor+1, by = "-1 week")[hor+1]
+    # Now define the data we can use to estimate the model
+    yest  <- window(WEI_365,end=convert_date(est))
+    # Fit the AR models using Arima
+    fit            <- Arima(yest,order=c(p,0,q))   #Fit model
+    fc[i_d,1]      <- forecast(fit,h=hor)$mean[hor]#Get forecast
+    fce[i_d,1]     <- fc[i_d,1]-target[i_d]        #Get forecast error
+    
+  }
+  results         <- list()
+  results$fc      <- fc
+  results$fce     <- fce
+  results$target  <- target
+  return(results)
+}
+
+h_all     <- c(26,52,104)      # Which horizons to consider
+lh        <- length(h_all)
+mseARMA   <- matrix(NA,lh,3) # Full sample
+p = c(2,3,5)
+q = c(3,0,4)
+parameters = as.data.frame(cbind(p,q))
+for (p in 1:3){
+  for (i in seq(1,lh)){
+    fcARMA             <- in_out_ARMA(h_all[i],parameters[p,1],parameters[p,2])
+    mseARMA[i,p]    <- colMeans(fcARMA$fce^2, na.rm = T)
+  }
+}
+  rownames(mseARMA)  <- c("26-step","52-step","104-step")
+  colnames(mseARMA)  <- c('ARMA(2,3)','ARMA(3,0)','ARMA(5,4)')
+  mseARMA
+
+
+
+
+
+
+
+
 
 #in and out of sample ARDL
 
