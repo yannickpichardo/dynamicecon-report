@@ -1,7 +1,6 @@
 #install.packages('vars')
 library("DataCombine")
 library('ggplot2')
-library("corrplot")
 library("tidyverse")
 library("dplyr")
 library("openxlsx")
@@ -11,7 +10,6 @@ library("viridisLite")
 library("viridis")
 library("RColorBrewer")
 library("lattice")
-library("microbenchmark")
 library("moments")
 library("stats")
 library("faraway")
@@ -21,7 +19,6 @@ library("tseries")
 library('fpp2')    # For forecasting
 library('dynlm')   # To estimate ARDL models
 library('urca')    # For the Dickey Fuller test
-library('corrplot')# For plotting correlation matrices
 library('quadprog')# For quadratic optimization
 library('forecast')
 library('readxl')  # To read Excel files
@@ -323,13 +320,24 @@ ggplot(data=ic, aes(x=seq(1,8),y=`AIC(n)`))+geom_line()+ylab("AIC")+xlab("VAR(p)
 
 
 #restricted VAR
-p        <- 6;
-VARr     <- VAR(Y,p=6,type=c("const"))
+p1        <- 9;
+VARr     <- VAR(Y,p=p1,type=c("const"))
 nseries  <- 3;
-mones    <- matrix(1,nrow = nseries,ncol=nseries) 
-mzero    <- matrix(0,nrow = nseries,ncol=nseries) 
+#mones    <- matrix(1,nrow = nseries,ncol=nseries) 
+#mzero    <- matrix(0,nrow = nseries,ncol=nseries) 
 vones    <- matrix(1,nrow = nseries,ncol=1)
-restrict <- cbind(mones,mones,mzero,mones,mzero,mones,vones) # order is: lag 1, ..., lag p and then the constant
+lag1mat <- matrix(1,nrow = nseries,ncol=nseries, byrow = TRUE) 
+lag2mat <- matrix(1,nrow = nseries,ncol=nseries, byrow = TRUE) 
+lag3mat <- matrix(1,nrow = nseries,ncol=nseries, byrow = TRUE) 
+lag4mat <- matrix(1,nrow = nseries,ncol=nseries, byrow = TRUE) 
+lag5mat <- matrix(1,nrow = nseries,ncol=nseries, byrow = TRUE) 
+lag6mat <- matrix(1,nrow = nseries,ncol=nseries, byrow = TRUE) 
+lag7mat <- matrix(1,nrow = nseries,ncol=nseries, byrow = TRUE) 
+lag8mat <- matrix(1,nrow = nseries,ncol=nseries, byrow = TRUE) 
+lag9mat <- matrix(1,nrow = nseries,ncol=nseries, byrow = TRUE) 
+restrict <- matrix(cbind(lag1mat, lag1mat, lag1mat, lag1mat, lag1mat, lag1mat, lag1mat, lag1mat, lag1mat, vones), nrow = 3, ncol = 16, byrow = TRUE) # order is: lag 1, ..., lag p and then the constant
+
+
 VARr     <- restrict(VARr, method = "man", resmat = restrict)
 
 # Somehow BIC has to be calculated by hand
