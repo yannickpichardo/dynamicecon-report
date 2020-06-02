@@ -131,17 +131,16 @@ autoplot(fARMA_3)
 
 #forecasting with VAR
 Y <- cbind(WEI_365, CCIw_365, sp_500_52week_diff_365)
-VAR4 <- VAR(Y,p=4,type = c('const'))
+VAR4 <- VAR(Y,p=2,type = c('const'))
 fVAR4 <- forecast(VAR4, h=200)
 autoplot(fVAR4$forecast$WEI)
 VAR4$varresult$WEI$coefficients
 
 #comparing forecasts
 autoplot(fARMA_1$mean,series="ARMA(2,3)")+ autolayer(fVAR4$forecast$WEI,series="VAR(4)")+labs(y="WEI")
-
+#+L(CCIw_365,(1:4))
 #ARDL model
-ARDL4 <- dynlm(WEI_365 ~L(WEI_365,(1:4)) +
-                 L(CCIw_365,(1:4))+L(sp_500_52week_diff_365,(1:4)))
+ARDL4 <- dynlm(WEI_365 ~L(WEI_365,(1:4)) +L(sp_500_52week_diff_365,(1:4)))
 summ<-summary(ARDL4)
 print(summ$coefficients,digits=1)
 
@@ -295,22 +294,22 @@ round(compare_CCI,digits=3)
 
 #IRF analysis
 Y           <- cbind(sp_500_52week_diff_365, CCIw_365,  WEI_365)
-colnames(Y) <- c('SP500', 'CCI', 'WEI' )
+colnames(Y) <- c('CCI','SP500', 'WEI' )
 VARmodel    <- VAR(Y,p=4,type=c("const"))
 roots(VARmodel) # computes eigenvalues of companion matrix
 
 
 
 irf_WEI <- irf(VARmodel,impulse=c("SP500"),
-               response=c("WEI"),ortho=T, n.ahead = 30)
+               response=c("WEI"),ortho=T, n.ahead = 300)
 plot(irf_WEI,plot.type=c("single"))
 
 irf_CCI <- irf(VARmodel,impulse=c("SP500"),
-               response=c("CCI"),ortho=T, n.ahead = 30)
+               response=c("CCI"),ortho=T, n.ahead = 300)
 plot(irf_CCI,plot.type=c("single"))
 
 irf_WEI_CCI <- irf(VARmodel,impulse=c("CCI"),
-               response=c("WEI"),ortho=T, n.ahead = 30)
+               response=c("WEI"),ortho=T, n.ahead = 300)
 plot(irf_WEI_CCI,plot.type=c("single"))
 
 
@@ -338,6 +337,10 @@ resid    <- residuals(VARr)
 T        <- length(resid[,1])
 BIC      <- log(det(t(resid)%*%resid/T)) + (log(T)/T)*sum(restrict)
 BIC
+
+fVARr <- forecast(VARr, h=200)
+autoplot(fVARr$forecast$WEI)
+VARr$varresult$WEI$coefficients
 # You can check that now the third lag is omitted by typing
 summary(VARr)
 
