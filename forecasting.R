@@ -353,5 +353,5 @@ summary(VARr)
 #  Ftest[i,2] <- qf(0.95,lags,T-lags-nvar*i)
 #}
 #print(Ftest)
-
+#
 
