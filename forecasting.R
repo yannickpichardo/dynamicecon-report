@@ -124,8 +124,8 @@ autoplot(fARMA_3)
 
 
 #forecasting with VAR
-Y <- cbind(WEI_365, CCIw_365, sp_500_52week_diff_365)
-VAR4 <- VAR(Y,p=2,type = c('const'))
+Y <- cbind(WEI_365, CCIw_365, sp500_52week_change_365 )
+VAR4 <- VAR(Y,p=3,type = c('const'))
 fVAR4 <- forecast(VAR4, h=200)
 autoplot(fVAR4$forecast$WEI)
 VAR4$varresult$WEI$coefficients
@@ -134,12 +134,12 @@ VAR4$varresult$WEI$coefficients
 autoplot(fARMA_1$mean,series="ARMA(2,3)")+ autolayer(fVAR4$forecast$WEI,series="VAR(4)")+labs(y="WEI")
 #+L(CCIw_365,(1:4))
 #ARDL model
-ARDL4 <- dynlm(WEI_365 ~L(WEI_365,(1:4)) +L(sp_500_52week_diff_365,(1:4)))
+ARDL4 <- dynlm(WEI_365 ~L(WEI_365,(1:4)) +L(sp500_52week_change_365 ,(1:4)) + L(CCIw_365,(1:4)))
 summ<-summary(ARDL4)
 print(summ$coefficients,digits=1)
 
 
-Y <- cbind(WEI_365, CCIw_365, sp_500_52week_diff_365)
+Y <- cbind(WEI_365, CCIw_365, sp500_52week_change_365 )
 VAR4 <- VAR(Y,p=4,type = c('const'))
 corder1  <- order(names(VAR4$varresult$WEI$coefficients))
 corder2  <- order(names(summ$coefficients[,1]))
@@ -164,7 +164,7 @@ convert_date <- function(date){
 }
 
 
-# TEST IF LOOP IS WRONG OR CODE IN LOOP
+# TEST IF LOOP IS WRONG OR CODE IN LOOP IS WRONG
 #dates   <- seq(fs,fe,by="week")
 #qF      <- convert_date(fs)
 #qL      <- convert_date(fe)
@@ -268,7 +268,7 @@ forecastARDL <- function(y,X,es,fs,fe,maxARp,hor){
 }
 
 # Get forecasts
-X_SP <- cbind(WEI_365,sp_500_52week_diff_365)
+X_SP <- cbind(WEI_365,sp500_52week_change_365 )
 X_CCI <- cbind(WEI_365,CCIw_365)
 fcARDLh1_SP  <- forecastARDL(WEI_365,X_SP,es,fs,fe,maxARp,1)
 fcARDLh1_CCI  <- forecastARDL(WEI_365,X_CCI,es,fs,fe,maxARp,1)
@@ -287,7 +287,7 @@ round(compare_CCI,digits=3)
 
 
 #IRF analysis
-Y           <- cbind(sp_500_52week_diff_365, CCIw_365,  WEI_365)
+Y           <- cbind(sp500_52week_change_365 , CCIw_365,  WEI_365)
 colnames(Y) <- c('CCI','SP500', 'WEI' )
 VARmodel    <- VAR(Y,p=4,type=c("const"))
 roots(VARmodel) # computes eigenvalues of companion matrix
@@ -307,7 +307,7 @@ irf_WEI_CCI <- irf(VARmodel,impulse=c("CCI"),
 plot(irf_WEI_CCI,plot.type=c("single"))
 
 
-Y           <- cbind(CCIw_365, sp_500_52week_diff_365, WEI_365)
+Y           <- cbind(CCIw_365, sp500_52week_change_365 , WEI_365)
 colnames(Y) <- c('CCI', 'SP500', 'WEI')
 VARmodel_ic <- VARselect(Y,type=c("const"),lag.max=8)
 ic          <- as.data.frame(t(VARmodel_ic$criteria))
@@ -338,20 +338,20 @@ VARr$varresult$WEI$coefficients
 # You can check that now the third lag is omitted by typing
 summary(VARr)
 
-Ftest <- matrix(NA,4,2)
-lags <- 4 # number of lags
-nvar <- 3 # number of variables
-for (i in seq(4)){
-  y    <- ardl.list[[i]]$residuals
-  T    <- length(y)
-  # Fit ARDL models with and without lags of y
-  fit1 <- dynlm(y ~ L(y,(1:lags)) + L(dgnp_T,(1:i)) + L(ddef_T,(1:i)) + L(ffr_T,(1:i)))
-  fit2 <- dynlm(y ~                 L(dgnp_T,(1:i)) + L(ddef_T,(1:i)) + L(ffr_T,(1:i)))
-  SSR1 <- sum(fit1$residuals^2)
-  SSR0 <- sum(fit2$residuals^2)
-  Ftest[i,1] <- ((SSR0-SSR1)/lags)/(SSR1/(T-lags-nvar*i))
-  Ftest[i,2] <- qf(0.95,lags,T-lags-nvar*i)
-}
-print(Ftest)
+#Ftest <- matrix(NA,4,2)
+#lags <- 4 # number of lags
+#nvar <- 3 # number of variables
+#for (i in seq(4)){
+#  y    <- ardl.list[[i]]$residuals
+#  T    <- length(y)
+#  # Fit ARDL models with and without lags of y
+#  fit1 <- dynlm(y ~ L(y,(1:lags)) + L(dgnp_T,(1:i)) + L(ddef_T,(1:i)) + L(ffr_T,(1:i)))
+#  fit2 <- dynlm(y ~                 L(dgnp_T,(1:i)) + L(ddef_T,(1:i)) + L(ffr_T,(1:i)))
+#  SSR1 <- sum(fit1$residuals^2)
+#  SSR0 <- sum(fit2$residuals^2)
+#  Ftest[i,1] <- ((SSR0-SSR1)/lags)/(SSR1/(T-lags-nvar*i))
+#  Ftest[i,2] <- qf(0.95,lags,T-lags-nvar*i)
+#}
+#print(Ftest)
 
 
