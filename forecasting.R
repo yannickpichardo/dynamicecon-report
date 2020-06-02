@@ -1,20 +1,7 @@
-library("DataCombine")
-library("corrplot")
+
 library("tidyverse")
 library("dplyr")
 library("openxlsx")
-library("hexbin")
-library("mapproj")
-library("viridisLite")
-library("viridis")
-library("RColorBrewer")
-library("lattice")
-library("microbenchmark")
-library("moments")
-library("stats")
-library("faraway")
-library("ggpubr")
-library("wordcloud")
 library("tseries")
 library('fpp2')    # For forecasting
 library('dynlm')   # To estimate ARDL models
@@ -108,7 +95,7 @@ sp_500_52week_diff       <- ts(data_1$sp_500_52week_diff, decimal_date(ymd("2008
 
 
 #forecasting with arma
-fit_1 <- Arima(WEI, order = c(2,0,3))
+fit_1 <- Arima(WEI, order = c(2,0,3), method = 'ML')
 fARMA_1 <- forecast(fit_1,h=200)
 autoplot(fARMA_1)
 
@@ -289,21 +276,21 @@ round(compare_CCI,digits=3)
 #IRF analysis
 Y           <- cbind(sp500_52week_change_365 , CCIw_365,  WEI_365)
 colnames(Y) <- c('CCI','SP500', 'WEI' )
-VARmodel    <- VAR(Y,p=4,type=c("const"))
+VARmodel    <- VAR(Y,p=3,type=c("const"))
 roots(VARmodel) # computes eigenvalues of companion matrix
 
 
 
 irf_WEI <- irf(VARmodel,impulse=c("SP500"),
-               response=c("WEI"),ortho=T, n.ahead = 300)
+               response=c("WEI"),ortho=T, n.ahead = 208)
 plot(irf_WEI,plot.type=c("single"))
 
 irf_CCI <- irf(VARmodel,impulse=c("SP500"),
-               response=c("CCI"),ortho=T, n.ahead = 300)
+               response=c("CCI"),ortho=T, n.ahead = 208)
 plot(irf_CCI,plot.type=c("single"))
 
 irf_WEI_CCI <- irf(VARmodel,impulse=c("CCI"),
-               response=c("WEI"),ortho=T, n.ahead = 300)
+               response=c("WEI"),ortho=T, n.ahead = 208)
 plot(irf_WEI_CCI,plot.type=c("single"))
 
 
