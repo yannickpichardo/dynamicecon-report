@@ -340,7 +340,7 @@ lag3mat <- matrix(c(1, 0, 0,
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
 lag4mat <- matrix(c(1, 0, 1,
                   0, 1, 0,
-                  0, 0,0)
+                  0, 0,1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
 lag5mat <- matrix(c(0, 1, 0,
                   0, 1, 0,
@@ -378,7 +378,19 @@ autoplot(fVARr$forecast$WEI)
 VARr$varresult$WEI$coefficients
 # You can check that now the third lag is omitted by typing
 summary(VARr)
+roots(VARr)
 
+irf_WEI <- irf(VARr,impulse=c("SP500"),
+               response=c("WEI"),ortho=T, n.ahead = 300)
+plot(irf_WEI,plot.type=c("single"))
+
+irf_CCI <- irf(VARr,impulse=c("SP500"),
+               response=c("CCI"),ortho=T, n.ahead = 300)
+plot(irf_CCI,plot.type=c("single"))
+
+irf_WEI_CCI <- irf(VARr,impulse=c("CCI"),
+                   response=c("WEI"),ortho=T, n.ahead = 300)
+plot(irf_WEI_CCI,plot.type=c("single"))
 #Ftest <- matrix(NA,4,2)
 #lags <- 4 # number of lags
 #nvar <- 3 # number of variables
