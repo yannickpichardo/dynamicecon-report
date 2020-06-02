@@ -262,6 +262,57 @@ plothoertje
   ggtitle("Difference within WEI vs S&P500 2008-2020") + ylab("Difference with WEI scaled by 100")
 plot21
 
+plot_WEI_SP500 <- ggplot(data = data_1, aes(x = Date)) +
+  geom_line(aes(y = WEI, colour = "WEI")) + 
+  geom_line(aes(y = sp500_52week_change / 10, colour = "S&P500 52 week %change scaled by 10")) +
+  geom_hline(yintercept = 0, colour = 'black') +
+  scale_color_manual("", values = c("WEI" = "green", "S&P500 52 week %change scaled by 10" = "blue")) + 
+  ggtitle("WEI vs 52 week % change of S&P500") + 
+  ylab("WEI and 52 week % change S&P500") + 
+  xlab("Date")
+plot_WEI_SP500
+
+plot_WEI_SP500_2008_2010 <- ggplot(data = data_1[1:105, ], aes(x = Date)) +
+  geom_line(aes(y = WEI, colour = "WEI")) + 
+  geom_line(aes(y = sp500_52week_change / 10, colour = "S&P500 52 week %change scaled by 10")) +
+  geom_hline(yintercept = 0, colour = 'black') +
+  scale_color_manual("", values = c("WEI" = "green", "S&P500 52 week %change scaled by 10" = "blue")) + 
+  ggtitle("WEI vs 52 week % change of S&P500 in 2008-2010") + 
+  ylab("WEI and 52 week % change S&P500") + 
+  xlab("Date")
+plot_WEI_SP500_2008_2010
+
+plot_WEI_SP500_before_covid <- ggplot(data = data_1[560:630, ], aes(x = Date)) +
+  geom_line(aes(y = WEI, colour = "WEI")) + 
+  geom_line(aes(y = sp500_52week_change / 10, colour = "S&P500 52 week %change")) +
+  geom_hline(yintercept = 0, colour = 'black') +
+  scale_color_manual("", values = c("WEI" = "green", "S&P500 52 week %change" = "blue")) + 
+  ggtitle("WEI vs 52 week % change of S&P500 before COVID-19") + 
+  ylab("WEI and 52 week % change S&P500") + 
+  xlab("Date")
+plot_WEI_SP500_before_covid
+
+plot_WEI_SP500_during_covid <- ggplot(data = data_1[630:639, ], aes(x = Date)) +
+  geom_line(aes(y = WEI, colour = "WEI")) + 
+  geom_line(aes(y = sp500_52week_change / 10, colour = "S&P500 52 week %change")) +
+  geom_hline(yintercept = 0, colour = 'black') +
+  scale_color_manual("", values = c("WEI" = "green", "S&P500 52 week %change" = "blue")) + 
+  ggtitle("WEI vs 52 week % change of S&P500 before COVID-19") + 
+  ylab("WEI and 52 week % change S&P500") + 
+  xlab("Date")
+plot_WEI_SP500_during_covid
+
+plot_WEI_SP500_CCI <- ggplot(data = data_1, aes(x = Date)) +
+  geom_line(aes(y = WEI, colour = "WEI")) + 
+  geom_line(aes(y = sp500_52week_change / 10, colour = "S&P500 52 week %change")) +
+  geom_line(aes(y = CCIw * 1.5, colour = "CCI")) +
+  geom_hline(yintercept = 0, colour = 'black') +
+  scale_color_manual("", values = c("WEI" = "green", "S&P500 52 week %change" = "blue", "CCI" = "red")) + 
+  ggtitle("WEI vs S&P500 vs CCI") + 
+  ylab("WEI, S&P500 and CCI") + 
+  xlab("Date") 
+plot_WEI_SP500_CCI
+
 plot17_2008_2010 <- ggplot(data = data[1:63,], aes(x = Date)) + 
   geom_line(aes(y =WEI_difference100, colour = "WEI difference scaled by 100")) + 
   geom_line(aes(y =SP500_time_series_change, colour = "S&P500 difference")) + 

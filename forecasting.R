@@ -1,4 +1,10 @@
 
+
+
+#install.packages('vars')
+library("DataCombine")
+library('ggplot2')
+library("corrplot")
 library("tidyverse")
 library("dplyr")
 library("openxlsx")
@@ -81,6 +87,10 @@ CCIw         <- na.approx(merged$lowfreq, xout = time(WEI),rule=2)
 CCIw         <- ts(CCIw,start = 2008,frequency=52)
 
 data_1$CCIw =as.vector(CCIw) 
+
+# Corrplot of all the relevant variables
+correlation <- cor(select(data_1, 4:8, 11:13))
+corrplot(correlation, method = "color", na.remove = TRUE)
 
 #preparing all time series
 WEI_365       <- ts(data_1$WEI, decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
