@@ -512,7 +512,28 @@ for (i in 1:208){
   fcombined[i,5] = 0.5*as.numeric(fVAR4$forecast$WEI_365$upper[i,1])+0.5*as.numeric(fARMA_1$upper[i,1])
   fcombined[i,6] = 0.5*as.numeric(fVAR4$forecast$WEI_365$upper[i,2])+0.5*as.numeric(fARMA_1$upper[i,2])
 }
-fe     <- as.Date("2020/03/21")
-combinedForecast = ts(fcombined[,2], start = decimal_date(ymd("2020-03-05")), frequency = 365.25/7)
 
+combinedForecast_1 = ts( c(as.vector(WEI_365),fcombined[,2]), decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+combinedForecast_low1 = ts( c(as.vector(WEI_365),fcombined[,3]), decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+combinedForecast_low2 = ts( c(as.vector(WEI_365),fcombined[,4]), decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+combinedForecast_high1 = ts( c(as.vector(WEI_365),fcombined[,5]), decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+combinedForecast_high2 = ts( c(as.vector(WEI_365),fcombined[,6]), decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
 
+ts.plot(combinedForecast_low1, combinedForecast_low2, combinedForecast_high1, combinedForecast_high2, combinedForecast_1, 
+        col= c('#4842f5','#00b5af','#4842f5', '#00b5af','#000000'), ylab = 'WEI', main = 'Combined Var(3) and ARMA(2,3) froecasts') 
+legend('bottomleft', legend = c('95% low', '80 low', '95% high' ,'80% high','forecast'), col =  c('#4842f5','#00b5af','#4842f5', '#00b5af','#000000'), lty=1)
+fcombined2 = matrix(0,636,2)
+for (i in 4:639){
+  fcombined2[i-3,2] = 0.5*as.numeric(VAR4$varresult$WEI_365$fitted.values[i-3])+0.5*as.numeric(fit_1$fitted[i])
+}
+residuals_combined = c()
+for(i  in 4:639){
+  residuals_combined[i-3] = as.vector(WEI_365)[i] - fcombined2[i-3,2]
+}
+SSR_c = sum(residuals_combined^2)
+SSR_VAR = sum(as.numeric(VAR4$varresult$WEI_365$residuals)^2)
+SSR_ARMA = sum(as.numeric(fit_1$residuals)[4:639]^2)
+SSR = matrix(c(SSR_c, SSR_VAR, SSR_ARMA),1,3)
+rownames(SSR)  <- c("SSR")
+colnames(SSR)  <- c('Combined','VAR(3)','ARMA(2,3)')
+SSR
