@@ -400,8 +400,8 @@ ggplot(data=ic, aes(x=seq(1,8),y=`SC(n)`))+geom_line()+ylab("BIC")+xlab("VAR(p)"
 ggplot(data=ic, aes(x=seq(1,8),y=`AIC(n)`))+geom_line()+ylab("AIC")+xlab("VAR(p)")
 
 #restricted VAR
-p1        <- 3;
-VARr     <- VAR(CCIw_365  ,p=p1,type=c("const"))
+p1        <- 6;
+VARr     <- VAR( Y,p=p1,type=c("const"))
 nseries  <- 3;
 #mones    <- matrix(1,nrow = nseries,ncol=nseries) 
 #mzero    <- matrix(0,nrow = nseries,ncol=nseries) 
@@ -410,39 +410,39 @@ lag1mat <- matrix(c(1, 1, 1,
                     1, 1, 1,
                     1, 1, 1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE) # lag matrix cols = cci, sp500 and WEI. Rows are the same but indicate the equation. E.g. if [1,3] = 1 then the CCI equation will include lag 1 of the WEI
-lag2mat <- matrix(c(1, 1, 1,
-                    1, 1, 1,
-                    1, 1, 1)
+lag2mat <- matrix(c(0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
 lag3mat <- matrix(c(1, 1, 1,
                     1, 1, 1,
                     1, 1, 1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
-lag4mat <- matrix(c(1, 1, 1,
-                    1, 1, 1,
-                    1, 1, 1)
+lag4mat <- matrix(c(0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
 lag5mat <- matrix(c(1, 1, 1,
                     1, 1, 1,
                     1, 1, 1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
-lag6mat <- matrix(c(1, 1, 1,
+lag6mat <- matrix(c(0, 0, 0,
+                    0, 0, 0,
+                    0, 0, 0)
+                  ,nrow = nseries,ncol=nseries, byrow = TRUE)
+lag7mat <- matrix(c(1, 1, 1,
                     1, 1, 1,
                     1, 1, 1)
-                  ,nrow = nseries,ncol=nseries, byrow = TRUE)
-lag7mat <- matrix(c(1, 0, 0,
-                    1, 0, 0,
-                    0, 0, 0)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
 lag8mat <- matrix(c(0, 0, 0,
                     0, 0, 0,
                     0, 0, 0)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
-lag9mat <- matrix(c(0, 0, 0,
-                    0, 0, 0,
-                    0, 0, 0)
+lag9mat <- matrix(c(1, 1, 1,
+                    1, 1, 1,
+                    1, 1, 1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
-restrict <- matrix(cbind(lag1mat, lag2mat, lag3mat, vones), nrow = 3, ncol = p1*3+1) # order is: lag 1, ..., lag p and then the constant
+restrict <- matrix(cbind(lag1mat, lag2mat, lag3mat, lag4mat, lag5mat, lag6mat,  vones), nrow = 3, ncol = p1*3+1) # order is: lag 1, ..., lag p and then the constant
 
 
 VARr     <- restrict(VARr, method = "man", resmat = restrict)
