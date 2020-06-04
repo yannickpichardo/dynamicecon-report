@@ -302,13 +302,13 @@ plot_WEI_SP500_during_covid <- ggplot(data = data_1[630:639, ], aes(x = Date)) +
   xlab("Date")
 plot_WEI_SP500_during_covid
 
-plot_WEI_SP500_CCI <- ggplot(data = data_1, aes(x = Date)) +
+plot_WEI_SP500_CCI <- ggplot(data = data_1[1:105, ], aes(x = Date)) +
   geom_line(aes(y = WEI, colour = "WEI")) + 
-  geom_line(aes(y = sp500_52week_change / 10, colour = "S&P500 52 week %change")) +
+  geom_line(aes(y = sp500_52week_change / 10, colour = "S&P500")) +
   geom_line(aes(y = CCIw * 1.5, colour = "CCI")) +
   geom_hline(yintercept = 0, colour = 'black') +
-  scale_color_manual("", values = c("WEI" = "green", "S&P500 52 week %change" = "blue", "CCI" = "red")) + 
-  ggtitle("WEI vs S&P500 vs CCI") + 
+  scale_color_manual("", values = c("WEI" = "green", "S&P500" = "blue", "CCI" = "red")) + 
+  ggtitle("WEI vs S&P500 52 week % change scaled by 10 vs CCI scaled by 1.5") + 
   ylab("WEI, S&P500 and CCI") + 
   xlab("Date") 
 plot_WEI_SP500_CCI
@@ -385,9 +385,16 @@ cor(data[4:11])
 cor(data[-1])
 cor.test(x = data$WEI, y = data$`S&P500`, method=c("pearson", "kendall", "spearman"))
 
-cor_all <- cor(data[4:8]) 
+data_2 <- data_1
+colnames(data_2)[12:13] <- c("S&P500 52 week difference", "CCI")
+cor_all <- cor(select(data_2, 4:8, 11:13)) 
 corrplot(cor_all, method = "color", na.rm = T)
-
+x <- as.data.frame(cor(data_2[11:13]))
+y <- as.data.frame(cor(data_2[4:8]))
+z <- as.data.frame(rbind(x, y))
+z <- cbind(data_2[4:8], data_2[11:13])
+Z <- cor(z)
+corrplot(Z, method = "color")
 
 ## Regressing several variables to identify statsitical significance ##
 
