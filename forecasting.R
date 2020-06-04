@@ -27,6 +27,10 @@ library('vars')    # VARs
 library('zoo')   
 library('lubridate')
 
+acf(data_1$sp500_52week_change)
+acf(data_1$CCIw)
+pacf(data_1$CCIw)
+pacf(data_1$sp500_52week_change)
 
 data_1 <- read.xlsx("WEI.xlsx", sheet = 2, detectDates = TRUE)
 data <- read.xlsx("WEI.xlsx", sheet = 2, detectDates = TRUE)
