@@ -93,13 +93,13 @@ Pacf(WEI)  #figure 2
 #MA gedeelte erg groot maar we hebben vraag gesteld op discussion board
 
 #Dickey Fuller test
-pmax    <- floor(12*((length(WEI)/100)^0.25))
-dft     <- ur.df(WEI,type=c("drift"),lags=pmax,selectlags=c("BIC"))
+pmax    <- floor(12*((length(data_1$WEI)/100)^0.25))
+dft     <- ur.df(data_1$WEI,type=c("drift"),lags=pmax,selectlags=c("BIC"))
 summdf  <- summary(dft)
 print(summdf@test.name)
 print(c("Test statistic: ", summdf@teststat[1]))
 print(c("Crit. vals", summdf@cval[1,]))
-#crit vals 1pct 5pct 10pct  figure 3
+1#crit vals 1pct 5pct 10pct  figure 3
 
 
 

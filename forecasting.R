@@ -128,10 +128,10 @@ autoplot(fARMA_3)
 
 #forecasting with VAR
 Y <- cbind(WEI_365, CCIw_365 , sp500_52week_change_365 )
-VAR4 <- VAR(Y,p=3,type = c('const'))
-fVAR4 <- forecast(VAR4, h=208)
-autoplot(fVAR4$forecast$WEI)
-VAR4$varresult$WEI$coefficients
+VAR3 <- VAR(Y,p=3,type = c('const'))
+fVAR3 <- forecast(VAR3, h=208)
+autoplot(fVAR3$forecast$WEI)
+VAR3$varresult$WEI$coefficients
 
 #comparing forecasts
 autoplot(fARMA_1$mean,series="ARMA(2,3)")+ autolayer(fVAR4$forecast$WEI,series="VAR(4)")+labs(y="WEI")
@@ -165,76 +165,6 @@ convert_date <- function(date){
     ceiling(as.numeric(format(date,'%W')))) 
   # Use %W for weeks and do not divide by 3.
 }
-
-
-# TEST IF LOOP IS WRONG OR CODE IN LOOP IS WRONG
-#dates   <- seq(fs,fe,by="week")
-#qF      <- convert_date(fs)
-#qL      <- convert_date(fe)
-#target  <- window(WEI,start=qF,end=qL)
-#est   <- seq(dates[20],length=40+1, by = "-1 week")[40+1]
-#yest = window(WEI,end=convert_date(est))
-#fit <- Arima(yest,order=c(3,0,0))
-#fc    <- ts(data=matrix(NA,length(dates),3),start=qF,frequency=365.25/7)
-#fce   <- ts(data=matrix(NA,length(dates),3),start=qF,frequency=365.25/7)
-#fc[20,3] <- forecast(fit,h=40)$mean[40]
-#fc
-#fce[20,3]     <- fc[20,3]-target[20]
-#fce
-
-forecastARMA <- function(y,es,fs,fe,maxARp,hor){
-  dates   <- seq(fs,fe,by="week") # (or "week"...)
-  n       <- length(dates)                 # number of forecasts
-  qF      <- convert_date(fs)
-  qL      <- convert_date(fe)
-  target  <- window(y,start=qF,end=qL)     # What we are forecasting.
-  
-  # Define ts objects where forecasts/forecast errors are saved.
-  # (Note that frequency=4 applies to quarterly data!)
-  fc    <- ts(data=matrix(NA,n,maxARp),start=qF,frequency=365.25/7)
-  fce   <- ts(data=matrix(NA,n,maxARp),start=qF,frequency=365.25/7)
-  
-  for (i_d in seq(1,n)){
-    # Define estimation sample (ends h periods before 1st forecast)
-    # Start at the first forecast date, 
-    # Then move back h+1 quarters back in time
-    est   <- seq(dates[i_d],length=hor+1, by = "-1 week")[hor+1]
-    # Now define the data we can use to estimate the model
-    yest  <- window(y,end=convert_date(est))
-    # Fit the AR models using Arima
-    for (j in seq(1,maxARp)){
-      fit            <- Arima(yest,order=c(j,0,0))   #Fit model
-      fc[i_d,j]      <- forecast(fit,h=hor)$mean[hor]#Get forecast
-      fce[i_d,j]     <- fc[i_d,j]-target[i_d]        #Get forecast error
-    }
-  }
-  results         <- list()
-  results$fc      <- fc
-  results$fce     <- fce
-  results$target  <- target
-  return(results)
-}
-
-
-
-
-#fcARMA             <- forecastARMA(WEI,es,fs,fe,maxARp,h_all[1])
-#fcARMA
-#mseARMA[1,] = colMeans(fcARMA$fce^2, na.rm = T)
-#mseARMA
-h_all     <- c(26,52,100)      # Which horizons to consider
-lh        <- length(h_all)
-mseARMA   <- matrix(NA,lh,maxARp) # Full sample
-for (i in seq(1,lh)){
-  fcARMA             <- forecastARMA(WEI,es,fs,fe,maxARp,h_all[i])
-  mseARMA[i,]    <- colMeans(fcARMA$fce^2, na.rm = T)
-}
-colnames(mseARMA)  <- c("AR(1)","AR(2)","AR(3)","AR(4)","AR(5)","AR(6)")
-rownames(mseARMA)  <- c("26-step","52-step","200-step")
-
-mseARMA
-
-
 
 
 
@@ -295,6 +225,7 @@ rownames(mseARMA)  <- c("26-step","52-step","104-step")
 colnames(mseARMA)  <- c('ARMA(2,3)','ARMA(3,0)','ARMA(5,4)')
 mseARMA
 
+# Absolute error
 
 h_all     <- c(26,52,104)      # Which horizons to consider
 lh        <- length(h_all)
@@ -308,70 +239,10 @@ for (p in 1:3){
     abeARMA[i,p]    <- colMeans(abs(fcARMA$fce), na.rm = T)
   }
 }
-rownames(mseARMA)  <- c("26-step","52-step","104-step")
-colnames(mseARMA)  <- c('ARMA(2,3)','ARMA(3,0)','ARMA(5,4)')
+rownames(abeARMA)  <- c("26-step","52-step","104-step")
+colnames(abeARMA)  <- c('ARMA(2,3)','ARMA(3,0)','ARMA(5,4)')
 
 abeARMA
-
-
-
-
-
-
-
-#in and out of sample ARDL
-
-forecastARDL <- function(y,X,es,fs,fe,maxARp,hor){
-  dates   <- seq(fs,fe,by="week") # (or "week"...)
-  n       <- length(dates)                 # number of forecasts
-  qF      <- convert_date(fs)
-  qL      <- convert_date(fe)
-  target  <- window(y,start=qF,end=qL)     # What we are forecasting.
-  
-  # Define ts objects where forecasts/forecast errors are saved.
-  # (Note that frequency=4 applies to quarterly data!)
-  fc    <- ts(data=matrix(NA,n,maxARp),start=qF,frequency=365.25/7)
-  fce   <- ts(data=matrix(NA,n,maxARp),start=qF,frequency=365.25/7)
-  
-  for (i_d in seq(1,n)){
-    # Define estimation sample (ends h periods before 1st forecast)
-    # Start at the first forecast date, 
-    # Then move back h+1 quarters back in time
-    est   <- seq(dates[i_d],length=hor+1, by = "-1 week")[hor+1]
-    # Now define the data we can use to estimate the model
-    Y = cbind(y,X)
-    Yest  <- window(Y,end=convert_date(est))
-    # Fit the AR models using Arima
-    for (j in seq(1,maxARp)){
-      fit            <- VAR(Yest,p=j,type=c('const'))   #Fit model
-      fc[i_d,j]      <- forecast(fit,h=hor)$forecast$y$mean[hor]#Get forecast
-      fce[i_d,j]     <- fc[i_d,j]-target[i_d]        #Get forecast error
-    }
-  }
-  results         <- list()
-  results$fc      <- fc
-  results$fce     <- fce
-  results$target  <- target
-  return(results)
-}
-
-# Get forecasts
-X_SP <- cbind(WEI_365,sp500_52week_change_365 )
-X_CCI <- cbind(WEI_365,CCIw_365)
-fcARDLh1_SP  <- forecastARDL(WEI_365,X_SP,es,fs,fe,maxARp,1)
-fcARDLh1_CCI  <- forecastARDL(WEI_365,X_CCI,es,fs,fe,maxARp,1)
-
-# Calculate MSE and compare
-mseARDL_SP     <- colMeans(fcARDLh1_SP$fce^2)
-mseARDL_CCI     <- colMeans(fcARDLh1_CCI$fce^2)
-compare_SP     <- rbind(mseARMA[1,],mseARDL_SP)
-compare_CCI     <- rbind(mseARMA[1,],mseARDL_CCI)
-rownames(compare_SP) <- c("AR","ARDL")
-colnames(compare_SP) <- c("p=1","p=2","p=3","p=4",'p=5','p=6')
-rownames(compare_CCI) <- c("AR","ARDL")
-colnames(compare_CCI) <- c("p=1","p=2","p=3","p=4",'p=5','p=6')
-round(compare_SP,digits=3)
-round(compare_CCI,digits=3)
 
 
 #IRF analysis
@@ -504,10 +375,6 @@ fVAR4 <- forecast(VAR4, h=208)
 autoplot(fVAR4$forecast$WEI)
 VAR4$varresult$WEI$coefficients
 
-fARMA_1$
-  fVAR4[[2]][[1]]
-fVAR4$forecast$WEI_365$mean
-
 fcombined = matrix(0,length(fARMA_1$mean),6)
 for (i in 1:208){
   fcombined[i,2] = 0.5*as.numeric(fVAR4$forecast$WEI_365$mean[i])+0.5*as.numeric(fARMA_1$mean[i])
@@ -526,6 +393,8 @@ combinedForecast_high2 = ts( c(as.vector(WEI_365),fcombined[,6]), decimal_date(y
 ts.plot(combinedForecast_low1, combinedForecast_low2, combinedForecast_high1, combinedForecast_high2, combinedForecast_1, 
         col= c('#4842f5','#00b5af','#4842f5', '#00b5af','#000000'), ylab = 'WEI', main = 'Combined Var(3) and ARMA(2,3) froecasts') 
 legend('bottomleft', legend = c('95% low', '80 low', '95% high' ,'80% high','forecast'), col =  c('#4842f5','#00b5af','#4842f5', '#00b5af','#000000'), lty=1)
+
+
 fcombined2 = matrix(0,636,2)
 for (i in 4:639){
   fcombined2[i-3,2] = 0.5*as.numeric(VAR4$varresult$WEI_365$fitted.values[i-3])+0.5*as.numeric(fit_1$fitted[i])

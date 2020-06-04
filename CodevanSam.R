@@ -302,7 +302,7 @@ plot_WEI_SP500_during_covid <- ggplot(data = data_1[630:639, ], aes(x = Date)) +
   xlab("Date")
 plot_WEI_SP500_during_covid
 
-plot_WEI_SP500_CCI <- ggplot(data = data_1[1:105, ], aes(x = Date)) +
+plot_WEI_SP500_CCI <- ggplot(data = data_1, aes(x = Date)) +
   geom_line(aes(y = WEI, colour = "WEI")) + 
   geom_line(aes(y = sp500_52week_change / 10, colour = "S&P500")) +
   geom_line(aes(y = CCIw * 1.5, colour = "CCI")) +
@@ -386,7 +386,7 @@ cor(data[-1])
 cor.test(x = data$WEI, y = data$`S&P500`, method=c("pearson", "kendall", "spearman"))
 
 data_2 <- data_1
-colnames(data_2)[12:13] <- c("S&P500 52 week difference", "CCI")
+colnames(data_2)[11:13] <- c("S&P500 %change" ,"S&P500 difference", "CCI")
 cor_all <- cor(select(data_2, 4:8, 11:13)) 
 corrplot(cor_all, method = "color", na.rm = T)
 x <- as.data.frame(cor(data_2[11:13]))

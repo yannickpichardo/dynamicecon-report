@@ -1,0 +1,1245 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\hypersetup{
+            pdftitle={R code Dynamic Econometrics Research Paper group 33},
+            pdfauthor={Sam Ansari, s3765571; Yannick Pichardo, s3623599; Berend Smaal, S3750256; Hannah Froklage, S3133567},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{R code Dynamic Econometrics Research Paper group 33}
+\author{Sam Ansari, s3765571 \and Yannick Pichardo, s3623599 \and Berend Smaal, S3750256 \and Hannah Froklage, S3133567}
+\date{June 4th 2020}
+
+\begin{document}
+\maketitle
+
+\section{All the R code we have used in the research
+paper.}\label{all-the-r-code-we-have-used-in-the-research-paper.}
+
+\section{These are all the libraries we
+used.}\label{these-are-all-the-libraries-we-used.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(}\StringTok{"DataCombine"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(}\StringTok{'ggplot2'}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(}\StringTok{"corrplot"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(}\StringTok{"tidyverse"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(}\StringTok{"dplyr"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(}\StringTok{"openxlsx"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(}\StringTok{'fpp2'}\NormalTok{)    }\CommentTok{# For forecasting}
+\KeywordTok{library}\NormalTok{(}\StringTok{'readxl'}\NormalTok{)  }\CommentTok{# To read Excel files}
+\KeywordTok{library}\NormalTok{(}\StringTok{'tseries'}\NormalTok{) }\CommentTok{# To estimate ARMA models}
+\KeywordTok{library}\NormalTok{(}\StringTok{'dynlm'}\NormalTok{)   }\CommentTok{# To estimate ARDL models}
+\KeywordTok{library}\NormalTok{(}\StringTok{'urca'}\NormalTok{)    }\CommentTok{# For the Dickey Fuller test}
+\KeywordTok{library}\NormalTok{(}\StringTok{'corrplot'}\NormalTok{)}\CommentTok{# For plotting correlation matrices}
+\KeywordTok{library}\NormalTok{(}\StringTok{'quadprog'}\NormalTok{)}\CommentTok{# For quadratic optimization}
+\KeywordTok{library}\NormalTok{(}\StringTok{'forecast'}\NormalTok{)}\CommentTok{# Lots of handy forecasting routines}
+\KeywordTok{library}\NormalTok{(}\StringTok{'vars'}\NormalTok{)    }\CommentTok{# VARs}
+\KeywordTok{library}\NormalTok{(}\StringTok{'zoo'}\NormalTok{)   }
+\KeywordTok{library}\NormalTok{(}\StringTok{'lubridate'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Loading the data in.}\label{loading-the-data-in.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{read.xlsx}\NormalTok{(}\StringTok{"WEI.xlsx"}\NormalTok{, }\DataTypeTok{sheet =} \DecValTok{2}\NormalTok{, }\DataTypeTok{detectDates =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{sp500_newdata <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"sp500newdata.csv"}\NormalTok{)}
+\NormalTok{CCI       <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{'CCI.csv'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Manipulating the data to put to our
+use.}\label{manipulating-the-data-to-put-to-our-use.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sp500_newdata <-}\StringTok{ }\NormalTok{sp500_newdata }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{average_open_close =}\NormalTok{ (Open }\OperatorTok{+}\StringTok{ }\NormalTok{Close) }\OperatorTok{/}\StringTok{ }\DecValTok{2}\NormalTok{)}
+
+\NormalTok{data <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{cbind}\NormalTok{(sp500data}\OperatorTok{$}\NormalTok{average_open_close)}
+\KeywordTok{colnames}\NormalTok{(data)[}\DecValTok{11}\NormalTok{] <-}\StringTok{ "average_open_close"}
+
+\NormalTok{sp500_52week_change <-}\StringTok{ }\KeywordTok{PercChange}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sp500_newdata, }\DataTypeTok{Var =} \StringTok{"average_open_close"}\NormalTok{, }
+                                  \DataTypeTok{NewVar =} \StringTok{"sp500_52week_change"}\NormalTok{, }\DataTypeTok{slideBy =} \OperatorTok{-}\DecValTok{52}\NormalTok{)}
+\NormalTok{sp500_52week_change <-}\StringTok{ }\NormalTok{sp500_52week_change}\OperatorTok{$}\NormalTok{sp500_52week_change}
+\NormalTok{sp500_52week_change <-}\StringTok{ }\NormalTok{sp500_52week_change[}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(sp500_52week_change)]}
+\NormalTok{data_}\DecValTok{1}\OperatorTok{$}\NormalTok{sp500_52week_change <-}\StringTok{ }\NormalTok{sp500_52week_change}
+\NormalTok{sp_500_52week_diff <-}\StringTok{ }\KeywordTok{diff}\NormalTok{(sp500_newdata}\OperatorTok{$}\NormalTok{average_open_close, }\DataTypeTok{lag =} \DecValTok{52}\NormalTok{)}
+\NormalTok{data_}\DecValTok{1}\OperatorTok{$}\NormalTok{sp_500_52week_diff <-}\StringTok{ }\NormalTok{sp_500_52week_diff}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Read CSV file and obtain data from 2007-2020, with values
+around
+0.}\label{read-csv-file-and-obtain-data-from-2007-2020-with-values-around-0.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CCI_data =}\StringTok{ }\NormalTok{CCI }\OperatorTok{%>%}\StringTok{ }\KeywordTok{slice}\NormalTok{(}\DecValTok{3}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(CCI)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{percentage =}\NormalTok{ Value }\OperatorTok{-}\StringTok{ }\DecValTok{100}\NormalTok{)}
+\NormalTok{CCI_}\DecValTok{2007}\NormalTok{       <-}\StringTok{ }\KeywordTok{ts}\NormalTok{(CCI_data[,}\DecValTok{9}\NormalTok{],}\DataTypeTok{start =} \DecValTok{2007}\NormalTok{,}\DataTypeTok{frequency=}\DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Take difference with respect to the value of last
+year.}\label{take-difference-with-respect-to-the-value-of-last-year.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{diff_CCI =}\StringTok{ }\KeywordTok{diff}\NormalTok{(CCI_}\DecValTok{2007}\NormalTok{, }\DecValTok{12}\NormalTok{)}
+\NormalTok{diff_CCI =}\StringTok{ }\KeywordTok{ts}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(diff_CCI), }\DataTypeTok{start =} \DecValTok{2008}\NormalTok{, }\DataTypeTok{frequency =} \DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Merge low and high freq time
+series.}\label{merge-low-and-high-freq-time-series.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lowfreq      <-}\StringTok{ }\KeywordTok{zoo}\NormalTok{(diff_CCI,}\KeywordTok{time}\NormalTok{(diff_CCI))}
+\NormalTok{highfreq     <-}\StringTok{ }\KeywordTok{zoo}\NormalTok{(WEI,}\KeywordTok{time}\NormalTok{(WEI))}
+\NormalTok{merged       <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(lowfreq,highfreq)}
+\end{Highlighting}
+\end{Shaded}
+
+Approximate the NAs and output at the dates of the WEI.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CCIw         <-}\StringTok{ }\KeywordTok{na.approx}\NormalTok{(merged}\OperatorTok{$}\NormalTok{lowfreq, }\DataTypeTok{xout =} \KeywordTok{time}\NormalTok{(WEI),}\DataTypeTok{rule=}\DecValTok{2}\NormalTok{)}
+\NormalTok{CCIw         <-}\StringTok{ }\KeywordTok{ts}\NormalTok{(CCIw,}\DataTypeTok{start =} \DecValTok{2008}\NormalTok{,}\DataTypeTok{frequency=}\DecValTok{52}\NormalTok{)}
+
+\NormalTok{data_}\DecValTok{1}\OperatorTok{$}\NormalTok{CCIw =}\KeywordTok{as.vector}\NormalTok{(CCIw) }
+\end{Highlighting}
+\end{Shaded}
+
+\section{Preparing all time series.}\label{preparing-all-time-series.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{WEI_}\DecValTok{365}\NormalTok{ <-}\StringTok{ }\KeywordTok{ts}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{WEI, }\KeywordTok{decimal_date}\NormalTok{(}\KeywordTok{ymd}\NormalTok{(}\StringTok{"2008-01-05"}\NormalTok{)), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{CCIw_}\DecValTok{365}\NormalTok{ <-}\StringTok{ }\KeywordTok{ts}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{CCIw, }\KeywordTok{decimal_date}\NormalTok{(}\KeywordTok{ymd}\NormalTok{(}\StringTok{"2008-01-05"}\NormalTok{)), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{sp500_52week_change_}\DecValTok{365}\NormalTok{ <-}\StringTok{ }\KeywordTok{ts}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{sp500_52week_change, }
+                              \KeywordTok{decimal_date}\NormalTok{(}\KeywordTok{ymd}\NormalTok{(}\StringTok{"2008-01-05"}\NormalTok{)), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{sp_500_52week_diff_}\DecValTok{365}\NormalTok{ <-}\StringTok{ }\KeywordTok{ts}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{sp_500_52week_diff, }
+                                   \KeywordTok{decimal_date}\NormalTok{(}\KeywordTok{ymd}\NormalTok{(}\StringTok{"2008-01-05"}\NormalTok{)), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{noise<-}\KeywordTok{ts}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\KeywordTok{length}\NormalTok{(CCIw_}\DecValTok{365}\NormalTok{))}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{sd}\NormalTok{((CCIw_}\DecValTok{365}\NormalTok{)}\OperatorTok{/}\DecValTok{100}\NormalTok{)), }\KeywordTok{decimal_date}\NormalTok{(}\KeywordTok{ymd}\NormalTok{(}\StringTok{"2008-01-05"}\NormalTok{)),}\DataTypeTok{frequency=}\FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{CCIn <-}\StringTok{ }\NormalTok{CCIw_}\DecValTok{365}\OperatorTok{+}\NormalTok{noise}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Plots we used.}\label{plots-we-used.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_WEI_SP500_CCI <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sp500_52week_change }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"S&P500"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ CCIw }\OperatorTok{*}\StringTok{ }\FloatTok{1.5}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"CCI"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{ =}\StringTok{ "green"}\NormalTok{, }\StringTok{"S&P500"}\NormalTok{ =}\StringTok{ "blue"}\NormalTok{, }\StringTok{"CCI"}\NormalTok{ =}\StringTok{ "red"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs S&P500 52 week % change scaled by 10 vs CCI scaled by 1.5"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI, S&P500 and CCI"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{) }
+\NormalTok{plot_WEI_SP500_CCI}
+
+\NormalTok{plot_WEI_SP500_CCI_2008_}\DecValTok{2010}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{[}\DecValTok{1}\OperatorTok{:}\DecValTok{105}\NormalTok{, ], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sp500_52week_change }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"S&P500"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ CCIw }\OperatorTok{*}\StringTok{ }\FloatTok{1.5}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"CCI"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{ =}\StringTok{ "green"}\NormalTok{, }\StringTok{"S&P500"}\NormalTok{ =}\StringTok{ "blue"}\NormalTok{, }\StringTok{"CCI"}\NormalTok{ =}\StringTok{ "red"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs S&P500 52 week % change scaled by 10 vs CCI scaled by 1.5 during 2008-2010"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI, S&P500 and CCI"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{) }
+\NormalTok{plot_WEI_SP500_CCI_2008_}\DecValTok{2010}
+
+\NormalTok{plot_WEI_SP500_CCI_before_covid <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{[}\DecValTok{560}\OperatorTok{:}\DecValTok{630}\NormalTok{,], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sp500_52week_change }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"S&P500"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ CCIw }\OperatorTok{*}\StringTok{ }\FloatTok{1.5}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"CCI"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{ =}\StringTok{ "green"}\NormalTok{, }\StringTok{"S&P500"}\NormalTok{ =}\StringTok{ "blue"}\NormalTok{, }\StringTok{"CCI"}\NormalTok{ =}\StringTok{ "red"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs S&P500 52 week % change scaled by 10 vs CCI scaled by 1.5 before covid"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI, S&P500 and CCI"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{) }
+\NormalTok{plot_WEI_SP500_CCI_before_covid}
+
+\NormalTok{plot_WEI_SP500_CCI_during_covid <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{[}\DecValTok{630}\OperatorTok{:}\DecValTok{639}\NormalTok{, ], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sp500_52week_change }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"S&P500"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ CCIw }\OperatorTok{*}\StringTok{ }\FloatTok{1.5}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"CCI"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{ =}\StringTok{ "green"}\NormalTok{, }\StringTok{"S&P500"}\NormalTok{ =}\StringTok{ "blue"}\NormalTok{, }\StringTok{"CCI"}\NormalTok{ =}\StringTok{ "red"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs S&P500 52 week % change scaled by 10 vs CCI scaled by 1.5 during covid"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI, S&P500 and CCI"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{) }
+\NormalTok{plot_WEI_SP500_CCI_during_covid}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Correlation plot.}\label{correlation-plot.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\NormalTok{data_}\DecValTok{1}
+\KeywordTok{colnames}\NormalTok{(data_}\DecValTok{2}\NormalTok{)[}\DecValTok{11}\OperatorTok{:}\DecValTok{13}\NormalTok{] <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"S&P500 %change"}\NormalTok{ ,}\StringTok{"S&P500 difference"}\NormalTok{, }\StringTok{"CCI"}\NormalTok{)}
+\NormalTok{z <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(data_}\DecValTok{2}\NormalTok{[}\DecValTok{4}\OperatorTok{:}\DecValTok{8}\NormalTok{], data_}\DecValTok{2}\NormalTok{[}\DecValTok{11}\OperatorTok{:}\DecValTok{13}\NormalTok{])}
+\NormalTok{Z <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(z)}
+\KeywordTok{corrplot}\NormalTok{(Z, }\DataTypeTok{method =} \StringTok{"color"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{(P)ACF plots and Dicky-Fuller
+tests.}\label{pacf-plots-and-dicky-fuller-tests.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{acf}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{WEI)}
+\KeywordTok{pacf}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{WEI)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{From the ACF plots we suspected non covariance stationarity, so
+we conducted some Dicky-Fuller tests. First we checked the
+WEI.}\label{from-the-acf-plots-we-suspected-non-covariance-stationarity-so-we-conducted-some-dicky-fuller-tests.-first-we-checked-the-wei.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pmax    <-}\StringTok{ }\KeywordTok{floor}\NormalTok{(}\DecValTok{12}\OperatorTok{*}\NormalTok{((}\KeywordTok{length}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{WEI)}\OperatorTok{/}\DecValTok{100}\NormalTok{)}\OperatorTok{^}\FloatTok{0.25}\NormalTok{))}
+\NormalTok{dft     <-}\StringTok{ }\KeywordTok{ur.df}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{WEI,}\DataTypeTok{type=}\KeywordTok{c}\NormalTok{(}\StringTok{"drift"}\NormalTok{),}\DataTypeTok{lags=}\NormalTok{pmax,}\DataTypeTok{selectlags=}\KeywordTok{c}\NormalTok{(}\StringTok{"BIC"}\NormalTok{))}
+\NormalTok{summdf  <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(dft)}
+\KeywordTok{print}\NormalTok{(summdf}\OperatorTok{@}\NormalTok{test.name)}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Test statistic: "}\NormalTok{, summdf}\OperatorTok{@}\NormalTok{teststat[}\DecValTok{1}\NormalTok{]))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Crit. vals"}\NormalTok{, summdf}\OperatorTok{@}\NormalTok{cval[}\DecValTok{1}\NormalTok{,]))}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Then the S\&P500.}\label{then-the-sp500.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pmax    <-}\StringTok{ }\KeywordTok{floor}\NormalTok{(}\DecValTok{12}\OperatorTok{*}\NormalTok{((}\KeywordTok{length}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{sp500_52week_change)}\OperatorTok{/}\DecValTok{100}\NormalTok{)}\OperatorTok{^}\FloatTok{0.25}\NormalTok{))}
+\NormalTok{dft     <-}\StringTok{ }\KeywordTok{ur.df}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{sp500_52week_change,}\DataTypeTok{type=}\KeywordTok{c}\NormalTok{(}\StringTok{"drift"}\NormalTok{),}\DataTypeTok{lags=}\NormalTok{pmax,}\DataTypeTok{selectlags=}\KeywordTok{c}\NormalTok{(}\StringTok{"BIC"}\NormalTok{))}
+\NormalTok{summdf  <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(dft)}
+\KeywordTok{print}\NormalTok{(summdf}\OperatorTok{@}\NormalTok{test.name)}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Test statistic: "}\NormalTok{, summdf}\OperatorTok{@}\NormalTok{teststat[}\DecValTok{1}\NormalTok{]))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Crit. vals"}\NormalTok{, summdf}\OperatorTok{@}\NormalTok{cval[}\DecValTok{1}\NormalTok{,]))}
+\end{Highlighting}
+\end{Shaded}
+
+\section{At last, for the CCI.}\label{at-last-for-the-cci.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pmax    <-}\StringTok{ }\KeywordTok{floor}\NormalTok{(}\DecValTok{12}\OperatorTok{*}\NormalTok{((}\KeywordTok{length}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{CCIw)}\OperatorTok{/}\DecValTok{100}\NormalTok{)}\OperatorTok{^}\FloatTok{0.25}\NormalTok{))}
+\NormalTok{dft     <-}\StringTok{ }\KeywordTok{ur.df}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{CCIw,}\DataTypeTok{type=}\KeywordTok{c}\NormalTok{(}\StringTok{"drift"}\NormalTok{),}\DataTypeTok{lags=}\NormalTok{pmax,}\DataTypeTok{selectlags=}\KeywordTok{c}\NormalTok{(}\StringTok{"BIC"}\NormalTok{))}
+\NormalTok{summdf  <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(dft)}
+\KeywordTok{print}\NormalTok{(summdf}\OperatorTok{@}\NormalTok{test.name)}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Test statistic: "}\NormalTok{, summdf}\OperatorTok{@}\NormalTok{teststat[}\DecValTok{1}\NormalTok{]))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Crit. vals"}\NormalTok{, summdf}\OperatorTok{@}\NormalTok{cval[}\DecValTok{1}\NormalTok{,]))}
+\end{Highlighting}
+\end{Shaded}
+
+\section{BIC and AIC to determine the parameters of the
+ARMA.}\label{bic-and-aic-to-determine-the-parameters-of-the-arma.}
+
+\section{Information criteria for the
+WEI.}\label{information-criteria-for-the-wei.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bic_WEI =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\OtherTok{NA}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{6}\NormalTok{)}
+\NormalTok{aic_WEI =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\OtherTok{NA}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{6}\NormalTok{)}
+\NormalTok{T_est =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\OtherTok{NA}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{6}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \KeywordTok{seq}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{8}\NormalTok{))\{}
+  \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{5}\NormalTok{))\{}
+\NormalTok{    fit =}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(i,}\DecValTok{0}\NormalTok{,j))}
+\NormalTok{    T_est[i}\OperatorTok{-}\DecValTok{1}\NormalTok{,j}\OperatorTok{+}\DecValTok{1}\NormalTok{] =}\StringTok{ }\KeywordTok{length}\NormalTok{(fit}\OperatorTok{$}\NormalTok{residuals)}
+\NormalTok{    bic_WEI[i}\OperatorTok{-}\DecValTok{1}\NormalTok{,j}\OperatorTok{+}\DecValTok{1}\NormalTok{] =}\StringTok{ }\NormalTok{fit}\OperatorTok{$}\NormalTok{bic}
+\NormalTok{    aic_WEI[i}\OperatorTok{-}\DecValTok{1}\NormalTok{,j}\OperatorTok{+}\DecValTok{1}\NormalTok{] =}\StringTok{ }\NormalTok{fit}\OperatorTok{$}\NormalTok{aic}
+\NormalTok{  \}}
+\NormalTok{\}}
+\NormalTok{T_est}
+
+\KeywordTok{colnames}\NormalTok{(bic_WEI) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"MA(0)"}\NormalTok{,}\StringTok{"MA(1)"}\NormalTok{,}\StringTok{"MA(2)"}\NormalTok{,}\StringTok{"MA(3)"}\NormalTok{,}\StringTok{"MA(4)"}\NormalTok{,}\StringTok{'MA(5)'}\NormalTok{)}
+\KeywordTok{rownames}\NormalTok{(bic_WEI) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'AR(2)'}\NormalTok{,}\StringTok{"AR(3)"}\NormalTok{,}\StringTok{"AR(4)"}\NormalTok{,}\StringTok{"AR(5)"}\NormalTok{,}\StringTok{"AR(6)"}\NormalTok{,}\StringTok{"AR(7)"}\NormalTok{,}\StringTok{'AR(8)'}\NormalTok{)}
+\NormalTok{bic_WEI }\CommentTok{#table 1}
+\NormalTok{min_values_bic=}\StringTok{ }\KeywordTok{sort}\NormalTok{(bic_WEI)[}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{]}
+\NormalTok{min_index_bic=}\KeywordTok{c}\NormalTok{() }
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{)\{}
+\NormalTok{  min_index_bic[i] =}\StringTok{ }\KeywordTok{which}\NormalTok{(bic_WEI}\OperatorTok{==}\NormalTok{min_values_bic[i])}
+\NormalTok{\}}
+\NormalTok{min_index_bic}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Information criteria for the VAR
+model.}\label{information-criteria-for-the-var-model.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{colnames}\NormalTok{(aic_WEI) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"MA(0)"}\NormalTok{,}\StringTok{"MA(1)"}\NormalTok{,}\StringTok{"MA(2)"}\NormalTok{,}\StringTok{"MA(3)"}\NormalTok{,}\StringTok{"MA(4)"}\NormalTok{,}\StringTok{'MA(5)'}\NormalTok{)}
+\KeywordTok{rownames}\NormalTok{(aic_WEI) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'AR(2)'}\NormalTok{,}\StringTok{"AR(3)"}\NormalTok{,}\StringTok{"AR(4)"}\NormalTok{,}\StringTok{"AR(5)"}\NormalTok{,}\StringTok{"AR(6)"}\NormalTok{,}\StringTok{"AR(7)"}\NormalTok{,}\StringTok{'AR(8)'}\NormalTok{)}
+\NormalTok{aic_WEI }\CommentTok{#table 2}
+\NormalTok{min_values_aic=}\StringTok{ }\KeywordTok{sort}\NormalTok{(aic_WEI)[}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{]}
+\NormalTok{min_index_aic=}\KeywordTok{c}\NormalTok{() }
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{)\{}
+\NormalTok{  min_index_aic[i] =}\StringTok{ }\KeywordTok{which}\NormalTok{(aic_WEI}\OperatorTok{==}\NormalTok{min_values_aic[i])}
+\NormalTok{\}}
+\NormalTok{min_index_aic}
+\end{Highlighting}
+\end{Shaded}
+
+\section{BIC graph.}\label{bic-graph.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Y           <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(CCIw_}\DecValTok{365}\NormalTok{, sp500_52week_change_}\DecValTok{365}\NormalTok{ , WEI_}\DecValTok{365}\NormalTok{)}
+\KeywordTok{colnames}\NormalTok{(Y) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'CCI'}\NormalTok{, }\StringTok{'SP500'}\NormalTok{, }\StringTok{'WEI'}\NormalTok{)}
+\NormalTok{VARmodel_ic <-}\StringTok{ }\KeywordTok{VARselect}\NormalTok{(Y,}\DataTypeTok{type=}\KeywordTok{c}\NormalTok{(}\StringTok{"const"}\NormalTok{),}\DataTypeTok{lag.max=}\DecValTok{8}\NormalTok{)}
+\NormalTok{ic          <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{t}\NormalTok{(VARmodel_ic}\OperatorTok{$}\NormalTok{criteria))}
+\NormalTok{ic}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{ic, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{8}\NormalTok{),}\DataTypeTok{y=}\StringTok{`}\DataTypeTok{SC(n)}\StringTok{`}\NormalTok{))}\OperatorTok{+}\KeywordTok{geom_line}\NormalTok{()}\OperatorTok{+}\KeywordTok{ylab}\NormalTok{(}\StringTok{"BIC"}\NormalTok{)}\OperatorTok{+}\KeywordTok{xlab}\NormalTok{(}\StringTok{"VAR(p)"}\NormalTok{)}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{ic, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{8}\NormalTok{),}\DataTypeTok{y=}\StringTok{`}\DataTypeTok{AIC(n)}\StringTok{`}\NormalTok{))}\OperatorTok{+}\KeywordTok{geom_line}\NormalTok{()}\OperatorTok{+}\KeywordTok{ylab}\NormalTok{(}\StringTok{"AIC"}\NormalTok{)}\OperatorTok{+}\KeywordTok{xlab}\NormalTok{(}\StringTok{"VAR(p)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{WEI residual analysis.}\label{wei-residual-analysis.}
+
+\section{Residual autocorrelation}\label{residual-autocorrelation}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{3}\NormalTok{)) }
+\KeywordTok{checkresiduals}\NormalTok{(fit_}\DecValTok{1}\NormalTok{)}
+
+\NormalTok{fit_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{checkresiduals}\NormalTok{(fit_}\DecValTok{2}\NormalTok{)}
+
+\NormalTok{fit_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{checkresiduals}\NormalTok{(fit_}\DecValTok{3}\NormalTok{)}
+
+\NormalTok{fit_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{4}\NormalTok{))}
+\KeywordTok{checkresiduals}\NormalTok{(fit_}\DecValTok{4}\NormalTok{)}
+
+\NormalTok{fit_}\DecValTok{5}\NormalTok{ <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{6}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{4}\NormalTok{))}
+\KeywordTok{checkresiduals}\NormalTok{(fit_}\DecValTok{5}\NormalTok{)}
+
+\NormalTok{fit_}\DecValTok{6}\NormalTok{ <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{7}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{5}\NormalTok{))}
+\KeywordTok{checkresiduals}\NormalTok{(fit_}\DecValTok{6}\NormalTok{)}
+
+\NormalTok{fit_}\DecValTok{7}\NormalTok{ =}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{52}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{3}\NormalTok{), }
+              \DataTypeTok{fixed=}\KeywordTok{c}\NormalTok{(}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+              \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{))}
+\KeywordTok{checkresiduals}\NormalTok{(fit_}\DecValTok{7}\NormalTok{)}
+
+
+\KeywordTok{autoplot}\NormalTok{(fit_}\DecValTok{1}\NormalTok{)}
+\NormalTok{fit_}\DecValTok{1}
+
+\KeywordTok{autoplot}\NormalTok{(fit_}\DecValTok{2}\NormalTok{)}
+\NormalTok{fit_}\DecValTok{2}
+
+\KeywordTok{autoplot}\NormalTok{(fit_}\DecValTok{3}\NormalTok{)}
+\NormalTok{fit_}\DecValTok{3}
+
+\KeywordTok{autoplot}\NormalTok{(fit_}\DecValTok{4}\NormalTok{)}
+\NormalTok{fit_}\DecValTok{4}
+
+\KeywordTok{autoplot}\NormalTok{(fit_}\DecValTok{5}\NormalTok{)}
+\NormalTok{fit_}\DecValTok{5}
+
+\KeywordTok{autoplot}\NormalTok{(fit_}\DecValTok{6}\NormalTok{)}
+\NormalTok{fit_}\DecValTok{6}
+
+\KeywordTok{autoplot}\NormalTok{(fit_}\DecValTok{7}\NormalTok{)}
+\NormalTok{fit_}\DecValTok{7}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Now we turn to actually forecasting the
+models.}\label{now-we-turn-to-actually-forecasting-the-models.}
+
+\section{ARMA(2,3)}\label{arma23}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{3}\NormalTok{))}
+\NormalTok{fARMA_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(fit_}\DecValTok{1}\NormalTok{,}\DataTypeTok{h=}\DecValTok{208}\NormalTok{)}
+\KeywordTok{autoplot}\NormalTok{(fARMA_}\DecValTok{1}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\section{VAR(3)}\label{var3}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Y <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{, CCIw_}\DecValTok{365}\NormalTok{ , sp500_52week_change_}\DecValTok{365}\NormalTok{ )}
+\NormalTok{VAR3 <-}\StringTok{ }\KeywordTok{VAR}\NormalTok{(Y,}\DataTypeTok{p=}\DecValTok{3}\NormalTok{,}\DataTypeTok{type =} \KeywordTok{c}\NormalTok{(}\StringTok{'const'}\NormalTok{))}
+\NormalTok{fVAR3 <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(VAR3, }\DataTypeTok{h=}\DecValTok{208}\NormalTok{)}
+\KeywordTok{autoplot}\NormalTok{(fVAR3}\OperatorTok{$}\NormalTok{forecast}\OperatorTok{$}\NormalTok{WEI)}
+\NormalTok{VAR3}\OperatorTok{$}\NormalTok{varresult}\OperatorTok{$}\NormalTok{WEI}\OperatorTok{$}\NormalTok{coefficients}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Now we determine the MSE/MAE of these
+models.}\label{now-we-determine-the-msemae-of-these-models.}
+
+\section{MSE of the ARMA models}\label{mse-of-the-arma-models}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{es     <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2008/1/5"}\NormalTok{) }\CommentTok{# Estimation start}
+\NormalTok{fs     <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2016/1/2"}\NormalTok{) }\CommentTok{# First forecast }
+\NormalTok{fe     <-}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2020/03/21"}\NormalTok{)}\CommentTok{# Final forecast}
+
+\NormalTok{convert_date <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(date)\{}
+  \KeywordTok{c}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format}\NormalTok{(date,}\StringTok{'%Y'}\NormalTok{)),}
+    \KeywordTok{ceiling}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format}\NormalTok{(date,}\StringTok{'%W'}\NormalTok{)))) }
+  \CommentTok{# Use %W for weeks and do not divide by 3.}
+\NormalTok{\}}
+
+\NormalTok{dates   <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(fs,fe,}\DataTypeTok{by=}\StringTok{"week"}\NormalTok{) }\CommentTok{# (or "week"...)}
+\NormalTok{n       <-}\StringTok{ }\KeywordTok{length}\NormalTok{(dates)                 }\CommentTok{# number of forecasts}
+\NormalTok{qF      <-}\StringTok{ }\KeywordTok{convert_date}\NormalTok{(fs)}
+\NormalTok{qL      <-}\StringTok{ }\KeywordTok{convert_date}\NormalTok{(fe)}
+\NormalTok{target  <-}\StringTok{ }\KeywordTok{window}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{,}\DataTypeTok{start=}\NormalTok{qF,}\DataTypeTok{end=}\NormalTok{qL)}
+
+\NormalTok{in_out_ARMA =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(hor, p, q)\{}
+\NormalTok{  fc    <-}\StringTok{ }\KeywordTok{ts}\NormalTok{(}\DataTypeTok{data=}\KeywordTok{matrix}\NormalTok{(}\OtherTok{NA}\NormalTok{,n,}\DecValTok{1}\NormalTok{),}\DataTypeTok{start=}\NormalTok{qF,}\DataTypeTok{frequency=}\FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{  fce   <-}\StringTok{ }\KeywordTok{ts}\NormalTok{(}\DataTypeTok{data=}\KeywordTok{matrix}\NormalTok{(}\OtherTok{NA}\NormalTok{,n,}\DecValTok{1}\NormalTok{),}\DataTypeTok{start=}\NormalTok{qF,}\DataTypeTok{frequency=}\FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+  
+  \ControlFlowTok{for}\NormalTok{ (i_d }\ControlFlowTok{in} \KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,n))\{}
+    \CommentTok{# Define estimation sample (ends h periods before 1st forecast)}
+    \CommentTok{# Start at the first forecast date, }
+    \CommentTok{# Then move back h+1 quarters back in time}
+\NormalTok{    est   <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(dates[i_d],}\DataTypeTok{length=}\NormalTok{hor}\OperatorTok{+}\DecValTok{1}\NormalTok{, }\DataTypeTok{by =} \StringTok{"-1 week"}\NormalTok{)[hor}\OperatorTok{+}\DecValTok{1}\NormalTok{]}
+    \CommentTok{# Now define the data we can use to estimate the model}
+\NormalTok{    yest  <-}\StringTok{ }\KeywordTok{window}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{,}\DataTypeTok{end=}\KeywordTok{convert_date}\NormalTok{(est))}
+    \CommentTok{# Fit the AR models using Arima}
+\NormalTok{    fit            <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(yest,}\DataTypeTok{order=}\KeywordTok{c}\NormalTok{(p,}\DecValTok{0}\NormalTok{,q))   }\CommentTok{#Fit model}
+\NormalTok{    fc[i_d,}\DecValTok{1}\NormalTok{]      <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(fit,}\DataTypeTok{h=}\NormalTok{hor)}\OperatorTok{$}\NormalTok{mean[hor]}\CommentTok{#Get forecast}
+\NormalTok{    fce[i_d,}\DecValTok{1}\NormalTok{]     <-}\StringTok{ }\NormalTok{fc[i_d,}\DecValTok{1}\NormalTok{]}\OperatorTok{-}\NormalTok{target[i_d]        }\CommentTok{#Get forecast error}
+    
+\NormalTok{  \}}
+\NormalTok{  results         <-}\StringTok{ }\KeywordTok{list}\NormalTok{()}
+\NormalTok{  results}\OperatorTok{$}\NormalTok{fc      <-}\StringTok{ }\NormalTok{fc}
+\NormalTok{  results}\OperatorTok{$}\NormalTok{fce     <-}\StringTok{ }\NormalTok{fce}
+\NormalTok{  results}\OperatorTok{$}\NormalTok{target  <-}\StringTok{ }\NormalTok{target}
+  \KeywordTok{return}\NormalTok{(results)}
+\NormalTok{\}}
+
+\NormalTok{h_all     <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{26}\NormalTok{,}\DecValTok{52}\NormalTok{,}\DecValTok{104}\NormalTok{)      }\CommentTok{# Which horizons to consider}
+\NormalTok{lh        <-}\StringTok{ }\KeywordTok{length}\NormalTok{(h_all)}
+\NormalTok{mseARMA   <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\OtherTok{NA}\NormalTok{,lh,}\DecValTok{3}\NormalTok{) }\CommentTok{# Full sample}
+\NormalTok{p =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{)}
+\NormalTok{q =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{4}\NormalTok{)}
+\NormalTok{parameters =}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(p,q))}
+\ControlFlowTok{for}\NormalTok{ (p }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{)\{}
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,lh))\{}
+\NormalTok{    fcARMA             <-}\StringTok{ }\KeywordTok{in_out_ARMA}\NormalTok{(h_all[i],parameters[p,}\DecValTok{1}\NormalTok{],parameters[p,}\DecValTok{2}\NormalTok{])}
+\NormalTok{    mseARMA[i,p]    <-}\StringTok{ }\KeywordTok{colMeans}\NormalTok{(fcARMA}\OperatorTok{$}\NormalTok{fce}\OperatorTok{^}\DecValTok{2}\NormalTok{, }\DataTypeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\KeywordTok{rownames}\NormalTok{(mseARMA)  <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"26-step"}\NormalTok{,}\StringTok{"52-step"}\NormalTok{,}\StringTok{"104-step"}\NormalTok{)}
+\KeywordTok{colnames}\NormalTok{(mseARMA)  <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'ARMA(2,3)'}\NormalTok{,}\StringTok{'ARMA(3,0)'}\NormalTok{,}\StringTok{'ARMA(5,4)'}\NormalTok{)}
+\NormalTok{mseARMA}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Absolute error/MAE.}\label{absolute-errormae.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{h_all     <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{26}\NormalTok{,}\DecValTok{52}\NormalTok{,}\DecValTok{104}\NormalTok{)      }\CommentTok{# Which horizons to consider}
+\NormalTok{lh        <-}\StringTok{ }\KeywordTok{length}\NormalTok{(h_all)}
+\NormalTok{abeARMA   <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\OtherTok{NA}\NormalTok{,lh,}\DecValTok{3}\NormalTok{)}
+\NormalTok{p =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{)}
+\NormalTok{q =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{4}\NormalTok{)}
+\NormalTok{parameters =}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(p,q))}
+\ControlFlowTok{for}\NormalTok{ (p }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{)\{}
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,lh))\{}
+\NormalTok{    fcARMA             <-}\StringTok{ }\KeywordTok{in_out_ARMA}\NormalTok{(h_all[i],parameters[p,}\DecValTok{1}\NormalTok{],parameters[p,}\DecValTok{2}\NormalTok{])}
+\NormalTok{    abeARMA[i,p]    <-}\StringTok{ }\KeywordTok{colMeans}\NormalTok{(}\KeywordTok{abs}\NormalTok{(fcARMA}\OperatorTok{$}\NormalTok{fce), }\DataTypeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\KeywordTok{rownames}\NormalTok{(abeARMA)  <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"26-step"}\NormalTok{,}\StringTok{"52-step"}\NormalTok{,}\StringTok{"104-step"}\NormalTok{)}
+\KeywordTok{colnames}\NormalTok{(abeARMA)  <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'ARMA(2,3)'}\NormalTok{,}\StringTok{'ARMA(3,0)'}\NormalTok{,}\StringTok{'ARMA(5,4)'}\NormalTok{)}
+
+\NormalTok{abeARMA}
+\end{Highlighting}
+\end{Shaded}
+
+\section{IRF Analysis.}\label{irf-analysis.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Y           <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(sp500_52week_change_}\DecValTok{365}\NormalTok{ , CCIw_}\DecValTok{365}\NormalTok{  ,  WEI_}\DecValTok{365}\NormalTok{)}
+\KeywordTok{colnames}\NormalTok{(Y) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'CCI'}\NormalTok{,}\StringTok{'SP500'}\NormalTok{, }\StringTok{'WEI'}\NormalTok{ )}
+\NormalTok{VARmodel    <-}\StringTok{ }\KeywordTok{VAR}\NormalTok{(Y,}\DataTypeTok{p=}\DecValTok{3}\NormalTok{,}\DataTypeTok{type=}\KeywordTok{c}\NormalTok{(}\StringTok{"const"}\NormalTok{))}
+\KeywordTok{roots}\NormalTok{(VARmodel) }\CommentTok{# computes eigenvalues of companion matrix}
+
+
+\NormalTok{irf_WEI <-}\StringTok{ }\KeywordTok{irf}\NormalTok{(VARmodel,}\DataTypeTok{impulse=}\KeywordTok{c}\NormalTok{(}\StringTok{"SP500"}\NormalTok{),}
+               \DataTypeTok{response=}\KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{),}\DataTypeTok{ortho=}\NormalTok{T, }\DataTypeTok{n.ahead =} \DecValTok{208}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(irf_WEI,}\DataTypeTok{plot.type=}\KeywordTok{c}\NormalTok{(}\StringTok{"single"}\NormalTok{))}
+
+\NormalTok{irf_WEI_CCI <-}\StringTok{ }\KeywordTok{irf}\NormalTok{(VARmodel,}\DataTypeTok{impulse=}\KeywordTok{c}\NormalTok{(}\StringTok{"CCI"}\NormalTok{),}
+                   \DataTypeTok{response=}\KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{),}\DataTypeTok{ortho=}\NormalTok{T, }\DataTypeTok{n.ahead =} \DecValTok{208}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(irf_WEI_CCI,}\DataTypeTok{plot.type=}\KeywordTok{c}\NormalTok{(}\StringTok{"single"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Now we combine the ARMA en VAR models in a combined
+forecast.}\label{now-we-combine-the-arma-en-var-models-in-a-combined-forecast.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{3}\NormalTok{))}
+\NormalTok{fARMA_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(fit_}\DecValTok{1}\NormalTok{,}\DataTypeTok{h=}\DecValTok{208}\NormalTok{)}
+\KeywordTok{autoplot}\NormalTok{(fARMA_}\DecValTok{1}\NormalTok{) }
+
+\NormalTok{Y <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{, CCIw_}\DecValTok{365}\NormalTok{ , sp500_52week_change_}\DecValTok{365}\NormalTok{ )}
+\NormalTok{VAR3 <-}\StringTok{ }\KeywordTok{VAR}\NormalTok{(Y,}\DataTypeTok{p=}\DecValTok{3}\NormalTok{,}\DataTypeTok{type =} \KeywordTok{c}\NormalTok{(}\StringTok{'const'}\NormalTok{))}
+\NormalTok{fVAR3 <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(VAR3, }\DataTypeTok{h=}\DecValTok{208}\NormalTok{)}
+\KeywordTok{autoplot}\NormalTok{(fVAR3}\OperatorTok{$}\NormalTok{forecast}\OperatorTok{$}\NormalTok{WEI)}
+\NormalTok{VAR3}\OperatorTok{$}\NormalTok{varresult}\OperatorTok{$}\NormalTok{WEI}\OperatorTok{$}\NormalTok{coefficients}
+
+\NormalTok{fcombined =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{,}\KeywordTok{length}\NormalTok{(fARMA_}\DecValTok{1}\OperatorTok{$}\NormalTok{mean),}\DecValTok{6}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{208}\NormalTok{)\{}
+\NormalTok{  fcombined[i,}\DecValTok{2}\NormalTok{] =}\StringTok{ }
+\StringTok{    }\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fVAR3}\OperatorTok{$}\NormalTok{forecast}\OperatorTok{$}\NormalTok{WEI_}\DecValTok{365}\OperatorTok{$}\NormalTok{mean[i])}\OperatorTok{+}\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fARMA_}\DecValTok{1}\OperatorTok{$}\NormalTok{mean[i])}
+\NormalTok{  fcombined[i,}\DecValTok{3}\NormalTok{] =}\StringTok{ }
+\StringTok{    }\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fVAR3}\OperatorTok{$}\NormalTok{forecast}\OperatorTok{$}\NormalTok{WEI_}\DecValTok{365}\OperatorTok{$}\NormalTok{lower[i,}\DecValTok{1}\NormalTok{])}\OperatorTok{+}\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fARMA_}\DecValTok{1}\OperatorTok{$}\NormalTok{lower[i,}\DecValTok{1}\NormalTok{])}
+\NormalTok{  fcombined[i,}\DecValTok{4}\NormalTok{] =}\StringTok{ }
+\StringTok{    }\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fVAR3}\OperatorTok{$}\NormalTok{forecast}\OperatorTok{$}\NormalTok{WEI_}\DecValTok{365}\OperatorTok{$}\NormalTok{lower[i,}\DecValTok{2}\NormalTok{])}\OperatorTok{+}\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fARMA_}\DecValTok{1}\OperatorTok{$}\NormalTok{lower[i,}\DecValTok{2}\NormalTok{])}
+\NormalTok{  fcombined[i,}\DecValTok{5}\NormalTok{] =}\StringTok{ }
+\StringTok{    }\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fVAR3}\OperatorTok{$}\NormalTok{forecast}\OperatorTok{$}\NormalTok{WEI_}\DecValTok{365}\OperatorTok{$}\NormalTok{upper[i,}\DecValTok{1}\NormalTok{])}\OperatorTok{+}\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fARMA_}\DecValTok{1}\OperatorTok{$}\NormalTok{upper[i,}\DecValTok{1}\NormalTok{])}
+\NormalTok{  fcombined[i,}\DecValTok{6}\NormalTok{] =}\StringTok{ }
+\StringTok{    }\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fVAR3}\OperatorTok{$}\NormalTok{forecast}\OperatorTok{$}\NormalTok{WEI_}\DecValTok{365}\OperatorTok{$}\NormalTok{upper[i,}\DecValTok{2}\NormalTok{])}\OperatorTok{+}\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fARMA_}\DecValTok{1}\OperatorTok{$}\NormalTok{upper[i,}\DecValTok{2}\NormalTok{])}
+\NormalTok{\}}
+
+\NormalTok{combinedForecast_}\DecValTok{1}\NormalTok{ =}\StringTok{ }\KeywordTok{ts}\NormalTok{( }\KeywordTok{c}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{),fcombined[,}\DecValTok{2}\NormalTok{]),}
+                         \KeywordTok{decimal_date}\NormalTok{(}\KeywordTok{ymd}\NormalTok{(}\StringTok{"2008-01-05"}\NormalTok{)), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{combinedForecast_low1 =}\StringTok{ }\KeywordTok{ts}\NormalTok{( }\KeywordTok{c}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{),fcombined[,}\DecValTok{3}\NormalTok{]), }
+                            \KeywordTok{decimal_date}\NormalTok{(}\KeywordTok{ymd}\NormalTok{(}\StringTok{"2008-01-05"}\NormalTok{)), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{combinedForecast_low2 =}\StringTok{ }\KeywordTok{ts}\NormalTok{( }\KeywordTok{c}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{),fcombined[,}\DecValTok{4}\NormalTok{]),}
+                            \KeywordTok{decimal_date}\NormalTok{(}\KeywordTok{ymd}\NormalTok{(}\StringTok{"2008-01-05"}\NormalTok{)), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{combinedForecast_high1 =}\StringTok{ }\KeywordTok{ts}\NormalTok{( }\KeywordTok{c}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{),fcombined[,}\DecValTok{5}\NormalTok{]),}
+                             \KeywordTok{decimal_date}\NormalTok{(}\KeywordTok{ymd}\NormalTok{(}\StringTok{"2008-01-05"}\NormalTok{)), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{combinedForecast_high2 =}\StringTok{ }\KeywordTok{ts}\NormalTok{( }\KeywordTok{c}\NormalTok{(}\KeywordTok{as.vector}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{),fcombined[,}\DecValTok{6}\NormalTok{]),}
+                             \KeywordTok{decimal_date}\NormalTok{(}\KeywordTok{ymd}\NormalTok{(}\StringTok{"2008-01-05"}\NormalTok{)), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+
+\KeywordTok{ts.plot}\NormalTok{(combinedForecast_low1, combinedForecast_low2, combinedForecast_high1,}
+\NormalTok{        combinedForecast_high2, combinedForecast_}\DecValTok{1}\NormalTok{, }
+        \DataTypeTok{col=} \KeywordTok{c}\NormalTok{(}\StringTok{'#4842f5'}\NormalTok{,}\StringTok{'#00b5af'}\NormalTok{,}\StringTok{'#4842f5'}\NormalTok{, }\StringTok{'#00b5af'}\NormalTok{,}\StringTok{'#000000'}\NormalTok{),}
+        \DataTypeTok{ylab =} \StringTok{'WEI'}\NormalTok{, }\DataTypeTok{main =} \StringTok{'Combined Var(3) and ARMA(2,3) froecasts'}\NormalTok{) }
+\KeywordTok{legend}\NormalTok{(}\StringTok{'bottomleft'}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{'95% low'}\NormalTok{, }\StringTok{'80 low'}\NormalTok{, }\StringTok{'95% high'}\NormalTok{ ,}\StringTok{'80% high'}\NormalTok{,}\StringTok{'forecast'}\NormalTok{),}
+       \DataTypeTok{col =}  \KeywordTok{c}\NormalTok{(}\StringTok{'#4842f5'}\NormalTok{,}\StringTok{'#00b5af'}\NormalTok{,}\StringTok{'#4842f5'}\NormalTok{, }\StringTok{'#00b5af'}\NormalTok{,}\StringTok{'#000000'}\NormalTok{), }\DataTypeTok{lty=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{The calculation of the SSR of the combined
+model.}\label{the-calculation-of-the-ssr-of-the-combined-model.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fcombined2 =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{636}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{4}\OperatorTok{:}\DecValTok{639}\NormalTok{)\{}
+\NormalTok{  fcombined2[i}\OperatorTok{-}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{] =}\StringTok{ }
+\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(VAR3}\OperatorTok{$}\NormalTok{varresult}\OperatorTok{$}\NormalTok{WEI_}\DecValTok{365}\OperatorTok{$}\NormalTok{fitted.values[i}\OperatorTok{-}\DecValTok{3}\NormalTok{])}\OperatorTok{+}\FloatTok{0.5}\OperatorTok{*}\KeywordTok{as.numeric}\NormalTok{(fit_}\DecValTok{1}\OperatorTok{$}\NormalTok{fitted[i])}
+\NormalTok{\}}
+\NormalTok{residuals_combined =}\StringTok{ }\KeywordTok{c}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(i  }\ControlFlowTok{in} \DecValTok{4}\OperatorTok{:}\DecValTok{639}\NormalTok{)\{}
+\NormalTok{  residuals_combined[i}\OperatorTok{-}\DecValTok{3}\NormalTok{] =}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{)[i] }\OperatorTok{-}\StringTok{ }\NormalTok{fcombined2[i}\OperatorTok{-}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{]}
+\NormalTok{\}}
+\NormalTok{SSR_c =}\StringTok{ }\KeywordTok{sum}\NormalTok{(residuals_combined}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{SSR_VAR =}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(VAR3}\OperatorTok{$}\NormalTok{varresult}\OperatorTok{$}\NormalTok{WEI_}\DecValTok{365}\OperatorTok{$}\NormalTok{residuals)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{SSR_ARMA =}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(fit_}\DecValTok{1}\OperatorTok{$}\NormalTok{residuals)[}\DecValTok{4}\OperatorTok{:}\DecValTok{639}\NormalTok{]}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{SSR =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(SSR_c, SSR_VAR, SSR_ARMA),}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{)}
+\KeywordTok{rownames}\NormalTok{(SSR)  <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"SSR"}\NormalTok{)}
+\KeywordTok{colnames}\NormalTok{(SSR)  <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'Combined'}\NormalTok{,}\StringTok{'VAR(3)'}\NormalTok{,}\StringTok{'ARMA(2,3)'}\NormalTok{)}
+\NormalTok{SSR}
+\end{Highlighting}
+\end{Shaded}
+
+\section{This is code we did not include in the paper, but gave
+different
+insights.}\label{this-is-code-we-did-not-include-in-the-paper-but-gave-different-insights.}
+
+\section{From these plots we suspected non covariance
+stationarity.}\label{from-these-plots-we-suspected-non-covariance-stationarity.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{acf}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{sp500_52week_change)}
+\KeywordTok{pacf}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{sp500_52week_change)}
+
+\KeywordTok{acf}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{CCIw)}
+\KeywordTok{pacf}\NormalTok{(data_}\DecValTok{1}\OperatorTok{$}\NormalTok{CCIw)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{We looked at the restricted VAR, but decided not to use
+it,}\label{we-looked-at-the-restricted-var-but-decided-not-to-use-it}
+
+\section{because we could not find a significant better
+model.}\label{because-we-could-not-find-a-significant-better-model.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Y           <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(CCIw_}\DecValTok{365}\NormalTok{  , sp500_52week_change_}\DecValTok{365}\NormalTok{ , WEI_}\DecValTok{365}\NormalTok{)}
+\KeywordTok{colnames}\NormalTok{(Y) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'CCI'}\NormalTok{, }\StringTok{'SP500'}\NormalTok{, }\StringTok{'WEI'}\NormalTok{)}
+\NormalTok{VARmodel_ic <-}\StringTok{ }\KeywordTok{VARselect}\NormalTok{(Y,}\DataTypeTok{type=}\KeywordTok{c}\NormalTok{(}\StringTok{"const"}\NormalTok{),}\DataTypeTok{lag.max=}\DecValTok{8}\NormalTok{)}
+\NormalTok{ic          <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{t}\NormalTok{(VARmodel_ic}\OperatorTok{$}\NormalTok{criteria))}
+\NormalTok{ic}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{ic, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{8}\NormalTok{),}\DataTypeTok{y=}\StringTok{`}\DataTypeTok{SC(n)}\StringTok{`}\NormalTok{))}\OperatorTok{+}\KeywordTok{geom_line}\NormalTok{()}\OperatorTok{+}\KeywordTok{ylab}\NormalTok{(}\StringTok{"BIC"}\NormalTok{)}\OperatorTok{+}\KeywordTok{xlab}\NormalTok{(}\StringTok{"VAR(p)"}\NormalTok{)}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{ic, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{8}\NormalTok{),}\DataTypeTok{y=}\StringTok{`}\DataTypeTok{AIC(n)}\StringTok{`}\NormalTok{))}\OperatorTok{+}\KeywordTok{geom_line}\NormalTok{()}\OperatorTok{+}\KeywordTok{ylab}\NormalTok{(}\StringTok{"AIC"}\NormalTok{)}\OperatorTok{+}\KeywordTok{xlab}\NormalTok{(}\StringTok{"VAR(p)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Restricted VAR}\label{restricted-var}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p1        <-}\StringTok{ }\DecValTok{6}\NormalTok{;}
+\NormalTok{VARr     <-}\StringTok{ }\KeywordTok{VAR}\NormalTok{( Y,}\DataTypeTok{p=}\NormalTok{p1,}\DataTypeTok{type=}\KeywordTok{c}\NormalTok{(}\StringTok{"const"}\NormalTok{))}
+\NormalTok{nseries  <-}\StringTok{ }\DecValTok{3}\NormalTok{;}
+\CommentTok{#mones    <- matrix(1,nrow = nseries,ncol=nseries) }
+\CommentTok{#mzero    <- matrix(0,nrow = nseries,ncol=nseries) }
+\NormalTok{vones    <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DataTypeTok{nrow =}\NormalTok{ nseries,}\DataTypeTok{ncol=}\DecValTok{1}\NormalTok{)}
+\NormalTok{lag1mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                    \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                    \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{                  ,}\DataTypeTok{nrow =}\NormalTok{ nseries,}\DataTypeTok{ncol=}\NormalTok{nseries, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{) }
+\CommentTok{# lag matrix cols = cci, sp500 and WEI. }
+\CommentTok{#Rows are the same but indicate the equation.}
+\CommentTok{#E.g. if [1,3] = 1 then the CCI equation will include lag 1 of the WEI}
+\NormalTok{lag2mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{,}
+                    \DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{,}
+                    \DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\NormalTok{                  ,}\DataTypeTok{nrow =}\NormalTok{ nseries,}\DataTypeTok{ncol=}\NormalTok{nseries, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{lag3mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                    \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                    \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{                  ,}\DataTypeTok{nrow =}\NormalTok{ nseries,}\DataTypeTok{ncol=}\NormalTok{nseries, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{lag4mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{,}
+                    \DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{,}
+                    \DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\NormalTok{                  ,}\DataTypeTok{nrow =}\NormalTok{ nseries,}\DataTypeTok{ncol=}\NormalTok{nseries, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{lag5mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                    \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                    \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{                  ,}\DataTypeTok{nrow =}\NormalTok{ nseries,}\DataTypeTok{ncol=}\NormalTok{nseries, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{lag6mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{,}
+                    \DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{,}
+                    \DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\NormalTok{                  ,}\DataTypeTok{nrow =}\NormalTok{ nseries,}\DataTypeTok{ncol=}\NormalTok{nseries, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{lag7mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                    \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                    \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{                  ,}\DataTypeTok{nrow =}\NormalTok{ nseries,}\DataTypeTok{ncol=}\NormalTok{nseries, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{lag8mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{,}
+                    \DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{,}
+                    \DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\NormalTok{                  ,}\DataTypeTok{nrow =}\NormalTok{ nseries,}\DataTypeTok{ncol=}\NormalTok{nseries, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{lag9mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                    \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                    \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{                  ,}\DataTypeTok{nrow =}\NormalTok{ nseries,}\DataTypeTok{ncol=}\NormalTok{nseries, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{restrict <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(lag1mat, lag2mat, lag3mat, lag4mat, lag5mat, lag6mat,  vones),}
+           \DataTypeTok{nrow =} \DecValTok{3}\NormalTok{, }\DataTypeTok{ncol =}\NormalTok{ p1}\OperatorTok{*}\DecValTok{3}\OperatorTok{+}\DecValTok{1}\NormalTok{) }\CommentTok{# order is: lag 1, ..., lag p and then the constant}
+
+\NormalTok{VARr     <-}\StringTok{ }\KeywordTok{restrict}\NormalTok{(VARr, }\DataTypeTok{method =} \StringTok{"man"}\NormalTok{, }\DataTypeTok{resmat =}\NormalTok{ restrict)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Somehow BIC has to be calculated by
+hand.}\label{somehow-bic-has-to-be-calculated-by-hand.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{resid    <-}\StringTok{ }\KeywordTok{residuals}\NormalTok{(VARr)}
+\NormalTok{T        <-}\StringTok{ }\KeywordTok{length}\NormalTok{(resid[,}\DecValTok{1}\NormalTok{])}
+\NormalTok{BIC      <-}\StringTok{ }\KeywordTok{log}\NormalTok{(}\KeywordTok{det}\NormalTok{(}\KeywordTok{t}\NormalTok{(resid)}\OperatorTok{%*%}\NormalTok{resid}\OperatorTok{/}\NormalTok{T)) }\OperatorTok{+}\StringTok{ }\NormalTok{(}\KeywordTok{log}\NormalTok{(T)}\OperatorTok{/}\NormalTok{T)}\OperatorTok{*}\KeywordTok{sum}\NormalTok{(restrict)}
+\NormalTok{BIC}
+
+\NormalTok{fVARr <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(VARr, }\DataTypeTok{h=}\DecValTok{200}\NormalTok{)}
+\KeywordTok{autoplot}\NormalTok{(fVARr}\OperatorTok{$}\NormalTok{forecast}\OperatorTok{$}\NormalTok{WEI)}
+\NormalTok{VARr}\OperatorTok{$}\NormalTok{varresult}\OperatorTok{$}\NormalTok{WEI}\OperatorTok{$}\NormalTok{coefficients}
+\end{Highlighting}
+\end{Shaded}
+
+\section{You can check that now the third lag is omitted by
+typing.}\label{you-can-check-that-now-the-third-lag-is-omitted-by-typing.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(VARr)}
+\KeywordTok{roots}\NormalTok{(VARr)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Extra IRF we did not
+implement.}\label{extra-irf-we-did-not-implement.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{irf_WEI <-}\StringTok{ }\KeywordTok{irf}\NormalTok{(VARr,}\DataTypeTok{impulse=}\KeywordTok{c}\NormalTok{(}\StringTok{"SP500"}\NormalTok{),}
+               \DataTypeTok{response=}\KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{),}\DataTypeTok{ortho=}\NormalTok{T, }\DataTypeTok{n.ahead =} \DecValTok{300}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(irf_WEI,}\DataTypeTok{plot.type=}\KeywordTok{c}\NormalTok{(}\StringTok{"single"}\NormalTok{))}
+
+\NormalTok{irf_CCI <-}\StringTok{ }\KeywordTok{irf}\NormalTok{(VARr,}\DataTypeTok{impulse=}\KeywordTok{c}\NormalTok{(}\StringTok{"SP500"}\NormalTok{),}
+               \DataTypeTok{response=}\KeywordTok{c}\NormalTok{(}\StringTok{"CCI"}\NormalTok{),}\DataTypeTok{ortho=}\NormalTok{T, }\DataTypeTok{n.ahead =} \DecValTok{300}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(irf_CCI,}\DataTypeTok{plot.type=}\KeywordTok{c}\NormalTok{(}\StringTok{"single"}\NormalTok{))}
+
+\NormalTok{irf_WEI_CCI <-}\StringTok{ }\KeywordTok{irf}\NormalTok{(VARr,}\DataTypeTok{impulse=}\KeywordTok{c}\NormalTok{(}\StringTok{"CCI"}\NormalTok{),}
+                   \DataTypeTok{response=}\KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{),}\DataTypeTok{ortho=}\NormalTok{T, }\DataTypeTok{n.ahead =} \DecValTok{300}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(irf_WEI_CCI,}\DataTypeTok{plot.type=}\KeywordTok{c}\NormalTok{(}\StringTok{"single"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Rejected ARMA, the ARMA models we did not
+use.}\label{rejected-arma-the-arma-models-we-did-not-use.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{4}\NormalTok{)) }
+\NormalTok{fARMA_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(fit_}\DecValTok{2}\NormalTok{,}\DataTypeTok{h=}\DecValTok{208}\NormalTok{)}
+\KeywordTok{autoplot}\NormalTok{(fARMA_}\DecValTok{2}\NormalTok{)}
+
+\NormalTok{fit_}\DecValTok{3}\NormalTok{ =}\StringTok{ }\KeywordTok{Arima}\NormalTok{(WEI, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{52}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{3}\NormalTok{),}
+              \DataTypeTok{fixed=}\KeywordTok{c}\NormalTok{(}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}
+\NormalTok{              ,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+        \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{,}\OtherTok{NA}\NormalTok{))}
+\NormalTok{fARMA_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{forecast}\NormalTok{(fit_}\DecValTok{3}\NormalTok{,}\DataTypeTok{h=}\DecValTok{208}\NormalTok{)}
+\KeywordTok{autoplot}\NormalTok{(fARMA_}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Check if coefficients ARDL and VAR are the
+same.}\label{check-if-coefficients-ardl-and-var-are-the-same.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#ARDL model}
+\NormalTok{ARDL4 <-}\StringTok{ }\KeywordTok{dynlm}\NormalTok{(WEI_}\DecValTok{365} \OperatorTok{~}\KeywordTok{L}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{,(}\DecValTok{1}\OperatorTok{:}\DecValTok{4}\NormalTok{)) }\OperatorTok{+}\KeywordTok{L}\NormalTok{(sp500_52week_change_}\DecValTok{365}\NormalTok{ ,(}\DecValTok{1}\OperatorTok{:}\DecValTok{4}\NormalTok{)) }\OperatorTok{+}\StringTok{ }\KeywordTok{L}\NormalTok{(CCIw_}\DecValTok{365}\NormalTok{,(}\DecValTok{1}\OperatorTok{:}\DecValTok{4}\NormalTok{)))}
+\NormalTok{summ<-}\KeywordTok{summary}\NormalTok{(ARDL4)}
+\KeywordTok{print}\NormalTok{(summ}\OperatorTok{$}\NormalTok{coefficients,}\DataTypeTok{digits=}\DecValTok{1}\NormalTok{)}
+
+
+\NormalTok{Y <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(WEI_}\DecValTok{365}\NormalTok{, CCIw_}\DecValTok{365}\NormalTok{, sp500_52week_change_}\DecValTok{365}\NormalTok{ )}
+\NormalTok{VAR3 <-}\StringTok{ }\KeywordTok{VAR}\NormalTok{(Y,}\DataTypeTok{p=}\DecValTok{3}\NormalTok{,}\DataTypeTok{type =} \KeywordTok{c}\NormalTok{(}\StringTok{'const'}\NormalTok{))}
+\NormalTok{corder1  <-}\StringTok{ }\KeywordTok{order}\NormalTok{(}\KeywordTok{names}\NormalTok{(VAR3}\OperatorTok{$}\NormalTok{varresult}\OperatorTok{$}\NormalTok{WEI}\OperatorTok{$}\NormalTok{coefficients))}
+\NormalTok{corder2  <-}\StringTok{ }\KeywordTok{order}\NormalTok{(}\KeywordTok{names}\NormalTok{(summ}\OperatorTok{$}\NormalTok{coefficients[,}\DecValTok{1}\NormalTok{]))}
+\NormalTok{coefVAR  <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(VAR3}\OperatorTok{$}\NormalTok{varresult}\OperatorTok{$}\NormalTok{WEI}\OperatorTok{$}\NormalTok{coefficients[corder1],}
+\NormalTok{                  summ}\OperatorTok{$}\NormalTok{coefficients[corder2])}
+\KeywordTok{colnames}\NormalTok{(coefVAR)<-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"VAR(4)"}\NormalTok{,}\StringTok{"ARDL(4,4,4)"}\NormalTok{)}
+
+\KeywordTok{print}\NormalTok{(coefVAR,}\DataTypeTok{digits=}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Leading indicator analysis.}\label{leading-indicator-analysis.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot240 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ sp_500_52week_diff }\OperatorTok{/}\StringTok{ }\DecValTok{100}\NormalTok{), }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI), }\DataTypeTok{colour =} \StringTok{"blue"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =} \DecValTok{0}\NormalTok{), }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{)}
+\NormalTok{plot240}
+
+\NormalTok{plot239 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ sp500_52week_change }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{), }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI), }\DataTypeTok{colour =} \StringTok{"blue"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs S&P500 52 week percentage change"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"S&P500 scaled by 10"}\NormalTok{)}
+\NormalTok{plot239}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Some other data manipulation we
+used}\label{some-other-data-manipulation-we-used}
+
+\section{to determine whether other
+variables}\label{to-determine-whether-other-variables}
+
+\section{were significant to use.}\label{were-significant-to-use.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{SP500change <-}\StringTok{ }\KeywordTok{PercChange}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }\DataTypeTok{Var =} \StringTok{"S&P500"}\NormalTok{, }\DataTypeTok{NewVar =} \StringTok{"SP500change"}\NormalTok{)}
+\NormalTok{SP500change <-}\StringTok{ }\NormalTok{SP500change}\OperatorTok{$}\NormalTok{SP500change}
+\NormalTok{data}\OperatorTok{$}\NormalTok{SP500change <-}\StringTok{ }\NormalTok{SP500change}
+
+\NormalTok{sp500_perc_change<-}\StringTok{ }\KeywordTok{PercChange}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }\DataTypeTok{Var =} \StringTok{"average_open_close"}\NormalTok{,}
+                               \DataTypeTok{NewVar =} \StringTok{"sp500_perc_change"}\NormalTok{)}
+\NormalTok{sp500_perc_change <-}\StringTok{ }\NormalTok{sp500_perc_change}\OperatorTok{$}\NormalTok{sp500_perc_change}
+\NormalTok{data}\OperatorTok{$}\NormalTok{sp500_perc_change <-}\StringTok{ }\NormalTok{sp500_perc_change}
+
+\NormalTok{data}\OperatorTok{$}\NormalTok{lnSP500 <-}\StringTok{ }\KeywordTok{log}\NormalTok{(data}\OperatorTok{$}\StringTok{`}\DataTypeTok{S&P500}\StringTok{`}\NormalTok{)}
+\NormalTok{data}\OperatorTok{$}\NormalTok{lnBB <-}\StringTok{ }\KeywordTok{log}\NormalTok{(data}\OperatorTok{$}\NormalTok{BB)}
+\NormalTok{data}\OperatorTok{$}\NormalTok{lnM1 <-}\StringTok{ }\KeywordTok{log}\NormalTok{(data}\OperatorTok{$}\NormalTok{M1)}
+\NormalTok{data}\OperatorTok{$}\NormalTok{lnOil <-}\StringTok{ }\KeywordTok{log}\NormalTok{(data}\OperatorTok{$}\NormalTok{Oil)}
+
+\NormalTok{WEI_time_series_change <-}\StringTok{ }\KeywordTok{diff}\NormalTok{(data}\OperatorTok{$}\NormalTok{WEI)}
+\NormalTok{WEI_time_series_change <-}\StringTok{ }\KeywordTok{append}\NormalTok{(WEI_time_series_change, }\DecValTok{0}\NormalTok{, }\DataTypeTok{after =} \DecValTok{0}\NormalTok{)}
+\NormalTok{data <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{cbind}\NormalTok{(WEI_time_series_change)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Plotting several variables against the WEI to identify some
+correlation.}\label{plotting-several-variables-against-the-wei-to-identify-some-correlation.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot1 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ BB, }\DataTypeTok{y =}\NormalTok{ WEI)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{()}
+\NormalTok{plot1}
+
+\NormalTok{plot2 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ T10Y3M, }\DataTypeTok{y =}\NormalTok{ WEI)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }
+\NormalTok{plot2}
+
+\NormalTok{plot3 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ M1, }\DataTypeTok{y =}\NormalTok{ WEI)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{()}
+\NormalTok{plot3}
+
+\NormalTok{plot4 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI), }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ T10Y3M, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{))}
+\NormalTok{plot4}
+
+\NormalTok{plot5 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI), }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{label =} \StringTok{"WEI"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ sp500_perc_change, }
+                          \DataTypeTok{color =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{label =} \StringTok{"Change in BB"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ T10Y3M, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{label =} \StringTok{"Bond rates"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =} \DecValTok{0}\NormalTok{))}
+\NormalTok{plot5}
+
+\NormalTok{plot6 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ lnOil, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ lnSP500, }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ lnBB, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ lnM1, }\DataTypeTok{color =} \StringTok{"white"}\NormalTok{))}
+\NormalTok{plot6}
+
+\NormalTok{plot7 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ M1change, }\DataTypeTok{color =} \StringTok{"Money supply"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{WEIchange, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{color =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale_colour_manual}\NormalTok{(}\StringTok{""}\NormalTok{,  }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"Money supply"}\NormalTok{=}\StringTok{"blue"}\NormalTok{, }\StringTok{"WEI"}\NormalTok{=}\StringTok{"green"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs Money supply percentage change"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI and Money supply percentage change"}\NormalTok{) }
+\NormalTok{plot7}
+
+\NormalTok{plot8 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{BBchange, }\DataTypeTok{colour =} \StringTok{"Bank borrowings"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{))}\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{color =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale_colour_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"Bank borrowings"}\NormalTok{=}\StringTok{"blue"}\NormalTok{, }\StringTok{"WEI"}\NormalTok{=}\StringTok{"green"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs Bank borrowings percentage change"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI and the BB percentage percentage change"}\NormalTok{)  }
+\NormalTok{plot8}
+
+\NormalTok{plot9 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ BBchange, }\DataTypeTok{color =} \StringTok{"darkred"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ M1change, }\DataTypeTok{color =} \StringTok{"lightblue"}\NormalTok{))}
+\NormalTok{plot9}
+
+\NormalTok{plot10 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{color =} \StringTok{"Red"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ SP500change, }\DataTypeTok{color =} \StringTok{"Blue"}\NormalTok{))}
+\NormalTok{plot10}
+
+\NormalTok{plot11 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ Oil}\OperatorTok{*}\DecValTok{10}\NormalTok{, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI}\OperatorTok{*}\DecValTok{100}\NormalTok{, }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{))}
+\NormalTok{plot11}
+
+\NormalTok{plot12 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI}\OperatorTok{*}\DecValTok{1000}\NormalTok{, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =} \StringTok{`}\DataTypeTok{S&P500}\StringTok{`}\OperatorTok{*}\DecValTok{10}\NormalTok{, }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{))}
+\NormalTok{plot12}
+
+\NormalTok{plot13 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ BBchange, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{))}
+\NormalTok{plot13}
+
+\NormalTok{plot14 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sp500data) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ average_high_low, }\DataTypeTok{group =} \DecValTok{1}\NormalTok{, }\DataTypeTok{color =} \StringTok{"darkred"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ average_open_close, }\DataTypeTok{group =} \DecValTok{1}\NormalTok{, }\DataTypeTok{color =} \StringTok{"lightblue"}\NormalTok{))}
+\NormalTok{plot14}
+
+\NormalTok{plot15 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ SP500change, }\DataTypeTok{color =} \StringTok{"darkred"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ sp500_perc_change, }\DataTypeTok{color =} \StringTok{"lightblue"}\NormalTok{))}
+\NormalTok{plot15}
+
+
+\NormalTok{plot16 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{ Date)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sp500_perc_change, }\DataTypeTok{colour =} \StringTok{"S&P500"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale_colour_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"S&P500"}\NormalTok{=}\StringTok{"blue"}\NormalTok{, }\StringTok{"WEI"}\NormalTok{=}\StringTok{"green"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"The WEI vs S&P500 percentage changes"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI and S&P500 percentage changes"}\NormalTok{) }
+\NormalTok{plot16}
+
+\NormalTok{data[(}\KeywordTok{which.min}\NormalTok{(data}\OperatorTok{$}\NormalTok{WEIchange) }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{:}\NormalTok{(}\KeywordTok{which.min}\NormalTok{(data}\OperatorTok{$}\NormalTok{WEIchange) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{), ]}
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ data}\OperatorTok{$}\NormalTok{Date, }\DataTypeTok{y =}\NormalTok{ data}\OperatorTok{$}\NormalTok{WEI, }\DataTypeTok{type =} \StringTok{"l"}\NormalTok{)}
+\KeywordTok{data}\NormalTok{(}\KeywordTok{length}\NormalTok{(data}\OperatorTok{$}\NormalTok{WEIchange }\OperatorTok{-}\StringTok{ }\DecValTok{10}\NormalTok{))}
+
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfcol =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\KeywordTok{plot}\NormalTok{(data}\OperatorTok{$}\NormalTok{BB ,data}\OperatorTok{$}\NormalTok{WEI)}
+\KeywordTok{plot}\NormalTok{(data}\OperatorTok{$}\NormalTok{T10Y3M, data}\OperatorTok{$}\NormalTok{WEI)}
+\KeywordTok{plot}\NormalTok{(data}\OperatorTok{$}\NormalTok{M1, data}\OperatorTok{$}\NormalTok{WEI)}
+
+\NormalTok{plot18 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI_time_series_change, }\DataTypeTok{color =} \StringTok{"darkred"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ BBchange }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{, }\DataTypeTok{color =} \StringTok{"lightblue"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =} \DecValTok{0}\NormalTok{ , }\DataTypeTok{color =} \StringTok{"green"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Change in WEI vs BB growth rate"}\NormalTok{)}
+\NormalTok{plot18}
+
+\NormalTok{plot19 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI_time_series_change, }\DataTypeTok{color =} \StringTok{"darkred"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ M1change }\OperatorTok{/}\StringTok{ }\DecValTok{2}\NormalTok{, }\DataTypeTok{color =} \StringTok{"lightblue"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =} \DecValTok{0}\NormalTok{ , }\DataTypeTok{color =} \StringTok{"green"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Change in WEI vs M1 growth rate"}\NormalTok{)}
+\NormalTok{plot19}
+
+\NormalTok{plot20 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data[}\DecValTok{560}\OperatorTok{:}\DecValTok{630}\NormalTok{, ]) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI_time_series_change, }\DataTypeTok{color =} \StringTok{"darkred"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ diff_oil_price }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{, }\DataTypeTok{color =} \StringTok{"lightblue"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =} \DecValTok{0}\NormalTok{ , }\DataTypeTok{color =} \StringTok{"green"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"diff in WEI vs diff in Oil price"}\NormalTok{)}
+\NormalTok{plot20}
+
+\NormalTok{plot17 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data[}\DecValTok{560}\OperatorTok{:}\DecValTok{628}\NormalTok{, ]) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI_time_series_change, }\DataTypeTok{color =} \StringTok{"darkred"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ SP500_diff_change }\OperatorTok{/}\StringTok{ }\DecValTok{50}\NormalTok{, }\DataTypeTok{color =} \StringTok{"lightblue"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =} \DecValTok{0}\NormalTok{ , }\DataTypeTok{color =} \StringTok{"green"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Change in WEI vs S&P500 growth rate"}\NormalTok{)}
+\NormalTok{plot17}
+
+\NormalTok{plottest <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data[}\DecValTok{560}\OperatorTok{:}\DecValTok{628}\NormalTok{, ]) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ WEI_time_series_change, }\DataTypeTok{color =} \StringTok{"darkred"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ sp500_perc_change }\OperatorTok{/}\StringTok{ }\DecValTok{5}\NormalTok{, }\DataTypeTok{color =} \StringTok{"lightblue"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =} \DecValTok{0}\NormalTok{ , }\DataTypeTok{color =} \StringTok{"green"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Change in WEI vs S&P500 growth rate"}\NormalTok{)}
+\NormalTok{plottest}
+
+\NormalTok{plothoertje <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data[}\DecValTok{500}\OperatorTok{:}\DecValTok{600}\NormalTok{, ]) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ sp500_perc_change, }\DataTypeTok{color =} \StringTok{"darkred"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ SP500_diff_change }\OperatorTok{/}\StringTok{ }\DecValTok{50}\NormalTok{, }\DataTypeTok{color =} \StringTok{'lightblue'}\NormalTok{))}
+\NormalTok{plothoertje}
+
+\NormalTok{plot17 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{WEI_difference100, }\DataTypeTok{colour =} \StringTok{"WEI difference scaled by 100"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{SP500_time_series_change, }\DataTypeTok{colour =} \StringTok{"S&P500 difference"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale_colour_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} 
+  \KeywordTok{c}\NormalTok{(}\StringTok{"WEI difference scaled by 100"}\NormalTok{=}\StringTok{ "red"}\NormalTok{,}\StringTok{"S&P500 difference"}\NormalTok{=}\StringTok{ "blue"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Difference within WEI vs S&P500 2008-2020"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Difference with WEI scaled by 100"}\NormalTok{)}
+\NormalTok{plot21}
+
+\NormalTok{plot_WEI_SP500 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sp500_52week_change }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{,}
+                \DataTypeTok{colour =} \StringTok{"S&P500 52 week %change scaled by 10"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} 
+  \KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{ =}\StringTok{ "green"}\NormalTok{, }\StringTok{"S&P500 52 week %change scaled by 10"}\NormalTok{ =}\StringTok{ "blue"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs 52 week % change of S&P500"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI and 52 week % change S&P500"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{)}
+\NormalTok{plot_WEI_SP500}
+
+\NormalTok{plot_WEI_SP500_2008_}\DecValTok{2010}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{[}\DecValTok{1}\OperatorTok{:}\DecValTok{105}\NormalTok{, ], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sp500_52week_change }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{, }
+                \DataTypeTok{colour =} \StringTok{"S&P500 52 week %change scaled by 10"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} 
+     \KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{ =}\StringTok{ "green"}\NormalTok{, }\StringTok{"S&P500 52 week %change scaled by 10"}\NormalTok{ =}\StringTok{ "blue"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs 52 week % change of S&P500 in 2008-2010"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI and 52 week % change S&P500"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{)}
+\NormalTok{plot_WEI_SP500_2008_}\DecValTok{2010}
+
+\NormalTok{plot_WEI_SP500_before_covid <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{[}\DecValTok{560}\OperatorTok{:}\DecValTok{630}\NormalTok{, ], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sp500_52week_change }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"S&P500 52 week %change"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{ =}\StringTok{ "green"}\NormalTok{, }\StringTok{"S&P500 52 week %change"}\NormalTok{ =}\StringTok{ "blue"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs 52 week % change of S&P500 before COVID-19"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI and 52 week % change S&P500"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{)}
+\NormalTok{plot_WEI_SP500_before_covid}
+
+\NormalTok{plot_WEI_SP500_during_covid <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{[}\DecValTok{630}\OperatorTok{:}\DecValTok{639}\NormalTok{, ], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sp500_52week_change }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"S&P500 52 week %change"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{ =}\StringTok{ "green"}\NormalTok{, }\StringTok{"S&P500 52 week %change"}\NormalTok{ =}\StringTok{ "blue"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs 52 week % change of S&P500 before COVID-19"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI and 52 week % change S&P500"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{)}
+\NormalTok{plot_WEI_SP500_during_covid}
+
+\NormalTok{plot_WEI_SP500_CCI <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_}\DecValTok{1}\NormalTok{[}\DecValTok{1}\OperatorTok{:}\DecValTok{105}\NormalTok{, ], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ WEI, }\DataTypeTok{colour =} \StringTok{"WEI"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sp500_52week_change }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"S&P500"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ CCIw }\OperatorTok{*}\StringTok{ }\FloatTok{1.5}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"CCI"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"WEI"}\NormalTok{ =}\StringTok{ "green"}\NormalTok{, }\StringTok{"S&P500"}\NormalTok{ =}\StringTok{ "blue"}\NormalTok{, }\StringTok{"CCI"}\NormalTok{ =}\StringTok{ "red"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"WEI vs S&P500 52 week % change scaled by 10 vs CCI scaled by 1.5"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"WEI, S&P500 and CCI"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Date"}\NormalTok{) }
+\NormalTok{plot_WEI_SP500_CCI}
+
+\NormalTok{plot17_2008_}\DecValTok{2010}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data[}\DecValTok{1}\OperatorTok{:}\DecValTok{63}\NormalTok{,], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{WEI_difference100, }\DataTypeTok{colour =} \StringTok{"WEI difference scaled by 100"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{SP500_time_series_change, }\DataTypeTok{colour =} \StringTok{"S&P500 difference"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale_colour_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{values =} 
+  \KeywordTok{c}\NormalTok{(}\StringTok{"WEI difference scaled by 100"}\NormalTok{=}\StringTok{ "red"}\NormalTok{, }\StringTok{"S&P500 difference"}\NormalTok{=}\StringTok{ "blue"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Difference within WEI vs S&P500 2008-2010"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Difference with WEI scaled by 100"}\NormalTok{)}
+\NormalTok{plot17_2008_}\DecValTok{2010}
+
+\NormalTok{plot17_before_covid <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data[}\DecValTok{560}\OperatorTok{:}\DecValTok{630}\NormalTok{,], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{WEI_difference100, }\DataTypeTok{colour =} \StringTok{"WEI difference scaled by 100"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{SP500_time_series_change, }\DataTypeTok{colour =} \StringTok{"S&P500 difference"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale_colour_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }
+  \DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"WEI difference scaled by 100"}\NormalTok{=}\StringTok{ "red"}\NormalTok{, }\StringTok{"S&P500 difference"}\NormalTok{=}\StringTok{ "blue"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Difference within WEI vs S&P500 before COVID-19"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Difference with WEI scaled by 100"}\NormalTok{)}
+\NormalTok{plot17_before_covid}
+
+\NormalTok{plot17_during_covid <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data[}\DecValTok{630}\OperatorTok{:}\DecValTok{639}\NormalTok{,], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{WEI_difference100, }\DataTypeTok{colour =} \StringTok{"WEI difference scaled by 100"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{SP500_time_series_change, }\DataTypeTok{colour =} \StringTok{"S&P500 difference"}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{colour =} \StringTok{'black'}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale_colour_manual}\NormalTok{(}\StringTok{""}\NormalTok{, }
+  \DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{"WEI difference scaled by 100"}\NormalTok{=}\StringTok{ "red"}\NormalTok{,}\StringTok{"S&P500 difference"}\NormalTok{=}\StringTok{ "blue"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Difference within WEI vs S&P500 during COVID-2019"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Difference with WEI scaled by 100"}\NormalTok{)}
+\NormalTok{plot17_during_covid }
+\end{Highlighting}
+\end{Shaded}
+
+\section{Experimenting with time
+series.}\label{experimenting-with-time-series.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{BB_time_series =}\StringTok{ }\KeywordTok{ts}\NormalTok{(data[, }\DecValTok{9}\NormalTok{], }\DataTypeTok{start =} \KeywordTok{c}\NormalTok{(}\DecValTok{2008}\NormalTok{), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{BB_ts_change =}\StringTok{ }\KeywordTok{diff}\NormalTok{(BB_time_series)}
+\NormalTok{data}\OperatorTok{$}\NormalTok{BB_t}
+\NormalTok{y <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{), }\DataTypeTok{times =} \DecValTok{639}\NormalTok{))}
+
+\NormalTok{WEI_time_series =}\StringTok{ }\KeywordTok{ts}\NormalTok{(data[,}\DecValTok{4}\NormalTok{], }\DataTypeTok{start=} \KeywordTok{c}\NormalTok{(}\DecValTok{2008}\NormalTok{), }\DataTypeTok{frequency =} \FloatTok{365.25}\OperatorTok{/}\DecValTok{7}\NormalTok{)}
+\NormalTok{WEI_ts_change =}\StringTok{ }\KeywordTok{diff}\NormalTok{(WEI_time_series)}
+\NormalTok{time_series_data <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(WEI_ts_change)}
+\NormalTok{data}\OperatorTok{$}\NormalTok{WEI_time_series <-}\StringTok{ }\NormalTok{WEI_time_series}
+
+\NormalTok{WEI_time_series_change <-}\StringTok{ }\KeywordTok{diff}\NormalTok{(data}\OperatorTok{$}\NormalTok{WEI)}
+\NormalTok{WEI_time_series_change <-}\StringTok{ }\KeywordTok{append}\NormalTok{(WEI_time_series_change, }\DecValTok{0}\NormalTok{, }\DataTypeTok{after =} \DecValTok{0}\NormalTok{)}
+\NormalTok{data <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}\StringTok{ }\KeywordTok{cbind}\NormalTok{(WEI_time_series_change)}
+
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =} \KeywordTok{diff}\NormalTok{(WEI)))}
+
+\KeywordTok{autoplot}\NormalTok{(}\KeywordTok{diff}\NormalTok{(BB))}
+\NormalTok{p1 <-}\StringTok{ }\KeywordTok{autoplot}\NormalTok{(}\KeywordTok{diff}\NormalTok{(WEI))}
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ data}\OperatorTok{$}\NormalTok{Date, }\DataTypeTok{y =}\NormalTok{ data}\OperatorTok{$}\NormalTok{WEI)}
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ data}\OperatorTok{$}\NormalTok{Date, }\DataTypeTok{y =} \KeywordTok{diff}\NormalTok{(data}\OperatorTok{$}\NormalTok{WEI))}
+
+\NormalTok{p1}\OperatorTok{$}\NormalTok{layers }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }
+            \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ Date, }\DataTypeTok{y =}\NormalTok{ sp500_perc_change),}
+            \DataTypeTok{inherit.aes =}\NormalTok{ F)}
+
+\NormalTok{een_variabele_naam <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\KeywordTok{diff}\NormalTok{(WEI), }\KeywordTok{diff}\NormalTok{(BB_time_series }\OperatorTok{/}\StringTok{ }\DecValTok{100000}\NormalTok{))}
+\KeywordTok{plot.ts}\NormalTok{(een_variabele_naam, }\DataTypeTok{plot.type =} \StringTok{"single"}\NormalTok{, }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"red"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Correlation matrix and
+plots.}\label{correlation-matrix-and-plots.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{cor}\NormalTok{(data}\OperatorTok{$}\NormalTok{WEI, data}\OperatorTok{$}\NormalTok{T10Y3M), }\KeywordTok{cor}\NormalTok{(data}\OperatorTok{$}\NormalTok{WEI, data}\OperatorTok{$}\NormalTok{BB), }\KeywordTok{cor}\NormalTok{(data}\OperatorTok{$}\NormalTok{WEI, data}\OperatorTok{$}\NormalTok{M1))}
+\KeywordTok{print}\NormalTok{(x)}
+\KeywordTok{cor}\NormalTok{(data[}\DecValTok{4}\OperatorTok{:}\DecValTok{10}\NormalTok{])}
+\KeywordTok{corrplot}\NormalTok{(data[}\DecValTok{4}\OperatorTok{:}\DecValTok{10}\NormalTok{], }\DataTypeTok{type =} \StringTok{"upper"}\NormalTok{, }\DataTypeTok{order =} \StringTok{"hclust"}\NormalTok{, }\DataTypeTok{tl.col =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{tl.srt =} \DecValTok{45}\NormalTok{)}
+\KeywordTok{cor}\NormalTok{(data[}\DecValTok{4}\OperatorTok{:}\DecValTok{11}\NormalTok{])}
+\KeywordTok{cor}\NormalTok{(data[}\OperatorTok{-}\DecValTok{1}\NormalTok{])}
+\KeywordTok{cor.test}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ data}\OperatorTok{$}\NormalTok{WEI, }\DataTypeTok{y =}\NormalTok{ data}\OperatorTok{$}\StringTok{`}\DataTypeTok{S&P500}\StringTok{`}\NormalTok{, }\DataTypeTok{method=}\KeywordTok{c}\NormalTok{(}\StringTok{"pearson"}\NormalTok{, }\StringTok{"kendall"}\NormalTok{, }\StringTok{"spearman"}\NormalTok{))}
+
+\NormalTok{data_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\NormalTok{data_}\DecValTok{1}
+\KeywordTok{colnames}\NormalTok{(data_}\DecValTok{2}\NormalTok{)[}\DecValTok{12}\OperatorTok{:}\DecValTok{13}\NormalTok{] <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"S&P500 52 week difference"}\NormalTok{, }\StringTok{"CCI"}\NormalTok{)}
+\NormalTok{cor_all <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(}\KeywordTok{select}\NormalTok{(data_}\DecValTok{2}\NormalTok{, }\DecValTok{4}\OperatorTok{:}\DecValTok{8}\NormalTok{, }\DecValTok{11}\OperatorTok{:}\DecValTok{13}\NormalTok{)) }
+\KeywordTok{corrplot}\NormalTok{(cor_all, }\DataTypeTok{method =} \StringTok{"color"}\NormalTok{, }\DataTypeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{cor}\NormalTok{(data_}\DecValTok{2}\NormalTok{[}\DecValTok{11}\OperatorTok{:}\DecValTok{13}\NormalTok{]))}
+\NormalTok{y <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{cor}\NormalTok{(data_}\DecValTok{2}\NormalTok{[}\DecValTok{4}\OperatorTok{:}\DecValTok{8}\NormalTok{]))}
+\NormalTok{z <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{rbind}\NormalTok{(x, y))}
+\NormalTok{z <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(data_}\DecValTok{2}\NormalTok{[}\DecValTok{4}\OperatorTok{:}\DecValTok{8}\NormalTok{], data_}\DecValTok{2}\NormalTok{[}\DecValTok{11}\OperatorTok{:}\DecValTok{13}\NormalTok{])}
+\NormalTok{Z <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(z)}
+\KeywordTok{corrplot}\NormalTok{(Z, }\DataTypeTok{method =} \StringTok{"color"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Regressing several variables to identify statsitical
+significance.}\label{regressing-several-variables-to-identify-statsitical-significance.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(WEI }\OperatorTok{~}\StringTok{ }\NormalTok{T10Y3M }\OperatorTok{+}\StringTok{ }\NormalTok{BBchange, }\DataTypeTok{data =}\NormalTok{ data)}
+\KeywordTok{summary}\NormalTok{(model1)}
+\KeywordTok{anova}\NormalTok{(model1)}
+\KeywordTok{plot}\NormalTok{(model1)}
+\KeywordTok{summary}\NormalTok{(data)}
+
+\NormalTok{model2 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(WEI }\OperatorTok{~}\StringTok{ }\NormalTok{T10Y3M, }\DataTypeTok{data =}\NormalTok{ data)}
+\KeywordTok{summary}\NormalTok{(model2)}
+
+\NormalTok{model3 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(WEI }\OperatorTok{~}\StringTok{ `}\DataTypeTok{S&P500}\StringTok{`} \OperatorTok{+}\StringTok{ }\NormalTok{Oil }\OperatorTok{+}\StringTok{ }\NormalTok{FFR, }\DataTypeTok{data =}\NormalTok{ data)}
+\KeywordTok{summary}\NormalTok{(model3)}
+\KeywordTok{plot}\NormalTok{(model3)}
+
+\NormalTok{model4 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(WEI }\OperatorTok{~}\StringTok{ }\NormalTok{lnSP500 }\OperatorTok{+}\StringTok{ }\NormalTok{Oil }\OperatorTok{+}\StringTok{ }\NormalTok{FFR, }\DataTypeTok{data =}\NormalTok{ data)}
+\KeywordTok{summary}\NormalTok{(model4)}
+\KeywordTok{plot}\NormalTok{(model4)}
+
+\NormalTok{model5 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(WEI }\OperatorTok{~}\StringTok{ }\NormalTok{lnSP500 }\OperatorTok{+}\StringTok{ }\NormalTok{lnBB }\OperatorTok{+}\StringTok{ }\NormalTok{lnM1 }\OperatorTok{+}\StringTok{ }\NormalTok{lnOil, }\DataTypeTok{data =}\NormalTok{ data)}
+\KeywordTok{summary}\NormalTok{(model5)}
+
+
+\NormalTok{model6 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(WEI }\OperatorTok{~}\StringTok{ }\NormalTok{lnOil }\OperatorTok{+}\StringTok{ }\NormalTok{FFR }\OperatorTok{+}\StringTok{ }\NormalTok{T10Y3M, }\DataTypeTok{data =}\NormalTok{ data)}
+\KeywordTok{summary}\NormalTok{(model5)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Autocorrelation models (acf and
+pacf).}\label{autocorrelation-models-acf-and-pacf.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{acf}\NormalTok{(data}\OperatorTok{$}\NormalTok{sp500_perc_change, }\DataTypeTok{na.action =}\NormalTok{ na.pass)}
+\KeywordTok{pacf}\NormalTok{(data}\OperatorTok{$}\NormalTok{sp500_perc_change, }\DataTypeTok{na.action =}\NormalTok{ na.pass)}
+\end{Highlighting}
+\end{Shaded}
+
+\end{document}
