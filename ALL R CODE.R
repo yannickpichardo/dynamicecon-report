@@ -1,5 +1,31 @@
 ###################### ALL THE R CODE WE USED ####################################################
 
+################################## Library ####################################################
+library("DataCombine")
+library('ggplot2')
+library("corrplot")
+library("tidyverse")
+library("dplyr")
+library("openxlsx")
+library("tseries")
+library('fpp2')    # For forecasting
+library('dynlm')   # To estimate ARDL models
+library('urca')    # For the Dickey Fuller test
+library('corrplot')# For plotting correlation matrices
+library('quadprog')# For quadratic optimization
+library('forecast')
+library('readxl')  # To read Excel files
+library('fpp2')    # For forecasting
+library('tseries') # To estimate ARMA models
+library('dynlm')   # To estimate ARDL models
+library('urca')    # For the Dickey Fuller test
+library('corrplot')# For plotting correlation matrices
+library('quadprog')# For quadratic optimization
+library('forecast')# Lots of handy forecasting routines
+library('vars')    # VARs
+library('zoo')   
+library('lubridate')
+
 ############# Data loading #######################################################################
 
 data_1 <- read.xlsx("WEI.xlsx", sheet = 2, detectDates = TRUE)
@@ -101,14 +127,8 @@ corrplot(Z, method = "color")
 
 ################################# (P)ACF plots and Dicky-Fuller tests ###############################
 
-acf(data_1$sp500_52week_change)
-pacf(data_1$sp500_52week_change)
-
 acf(data_1$WEI)
 pacf(data_1$WEI)
-
-acf(data_1$CCIw)
-pacf(data_1$CCIw)
 
 # From the ACF plots we suspected non covariance stationarity, so we conducted some Dicky-Fuller tests. #
 # For the WEI
@@ -172,6 +192,7 @@ for (i in 1:3){
 }
 min_index_aic
 
+# BIC graph
 Y           <- cbind(CCIw_365, sp500_52week_change_365 , WEI_365)
 colnames(Y) <- c('CCI', 'SP500', 'WEI')
 VARmodel_ic <- VARselect(Y,type=c("const"),lag.max=8)
@@ -180,4 +201,170 @@ ic
 ggplot(data=ic, aes(x=seq(1,8),y=`SC(n)`))+geom_line()+ylab("BIC")+xlab("VAR(p)")
 ggplot(data=ic, aes(x=seq(1,8),y=`AIC(n)`))+geom_line()+ylab("AIC")+xlab("VAR(p)")
 
-############################################   ##########################################################
+############################################ Forecasting ##########################################################
+
+## ARMA forecasts:
+# ARMA(2,3)
+fit_1 <- Arima(WEI_365, order = c(2,0,3))
+fARMA_1 <- forecast(fit_1,h=208)
+autoplot(fARMA_1) 
+
+# VAR(3)
+Y <- cbind(WEI_365, CCIw_365 , sp500_52week_change_365 )
+VAR3 <- VAR(Y,p=3,type = c('const'))
+fVAR3 <- forecast(VAR3, h=208)
+autoplot(fVAR3$forecast$WEI)
+VAR3$varresult$WEI$coefficients
+
+########################################## MSE/MAE #########################################################
+#MSE of the ARMA models
+es     <- as.Date("2008/1/5") # Estimation start
+fs     <- as.Date("2016/1/2") # First forecast 
+fe     <- as.Date("2020/03/21")# Final forecast
+
+convert_date <- function(date){
+  c(as.numeric(format(date,'%Y')),
+    ceiling(as.numeric(format(date,'%W')))) 
+  # Use %W for weeks and do not divide by 3.
+}
+
+dates   <- seq(fs,fe,by="week") # (or "week"...)
+n       <- length(dates)                 # number of forecasts
+qF      <- convert_date(fs)
+qL      <- convert_date(fe)
+target  <- window(WEI_365,start=qF,end=qL)
+
+in_out_ARMA = function(hor, p, q){
+  fc    <- ts(data=matrix(NA,n,1),start=qF,frequency=365.25/7)
+  fce   <- ts(data=matrix(NA,n,1),start=qF,frequency=365.25/7)
+  
+  for (i_d in seq(1,n)){
+    # Define estimation sample (ends h periods before 1st forecast)
+    # Start at the first forecast date, 
+    # Then move back h+1 quarters back in time
+    est   <- seq(dates[i_d],length=hor+1, by = "-1 week")[hor+1]
+    # Now define the data we can use to estimate the model
+    yest  <- window(WEI_365,end=convert_date(est))
+    # Fit the AR models using Arima
+    fit            <- Arima(yest,order=c(p,0,q))   #Fit model
+    fc[i_d,1]      <- forecast(fit,h=hor)$mean[hor]#Get forecast
+    fce[i_d,1]     <- fc[i_d,1]-target[i_d]        #Get forecast error
+    
+  }
+  results         <- list()
+  results$fc      <- fc
+  results$fce     <- fce
+  results$target  <- target
+  return(results)
+}
+
+h_all     <- c(26,52,104)      # Which horizons to consider
+lh        <- length(h_all)
+mseARMA   <- matrix(NA,lh,3) # Full sample
+p = c(2,3,5)
+q = c(3,0,4)
+parameters = as.data.frame(cbind(p,q))
+for (p in 1:3){
+  for (i in seq(1,lh)){
+    fcARMA             <- in_out_ARMA(h_all[i],parameters[p,1],parameters[p,2])
+    mseARMA[i,p]    <- colMeans(fcARMA$fce^2, na.rm = T)
+  }
+}
+rownames(mseARMA)  <- c("26-step","52-step","104-step")
+colnames(mseARMA)  <- c('ARMA(2,3)','ARMA(3,0)','ARMA(5,4)')
+mseARMA
+
+# Absolute error/MAE
+
+h_all     <- c(26,52,104)      # Which horizons to consider
+lh        <- length(h_all)
+abeARMA   <- matrix(NA,lh,3)
+p = c(2,3,5)
+q = c(3,0,4)
+parameters = as.data.frame(cbind(p,q))
+for (p in 1:3){
+  for (i in seq(1,lh)){
+    fcARMA             <- in_out_ARMA(h_all[i],parameters[p,1],parameters[p,2])
+    abeARMA[i,p]    <- colMeans(abs(fcARMA$fce), na.rm = T)
+  }
+}
+rownames(abeARMA)  <- c("26-step","52-step","104-step")
+colnames(abeARMA)  <- c('ARMA(2,3)','ARMA(3,0)','ARMA(5,4)')
+
+abeARMA
+
+######################################### IRF ############################################################
+
+Y           <- cbind(sp500_52week_change_365 , CCIw_365  ,  WEI_365)
+colnames(Y) <- c('CCI','SP500', 'WEI' )
+VARmodel    <- VAR(Y,p=3,type=c("const"))
+roots(VARmodel) # computes eigenvalues of companion matrix
+
+
+irf_WEI <- irf(VARmodel,impulse=c("SP500"),
+               response=c("WEI"),ortho=T, n.ahead = 208)
+plot(irf_WEI,plot.type=c("single"))
+
+irf_WEI_CCI <- irf(VARmodel,impulse=c("CCI"),
+                   response=c("WEI"),ortho=T, n.ahead = 208)
+plot(irf_WEI_CCI,plot.type=c("single"))
+
+######################################## Combined forecast ###############################################
+
+fit_1 <- Arima(WEI_365, order = c(2,0,3))
+fARMA_1 <- forecast(fit_1,h=208)
+autoplot(fARMA_1) 
+
+Y <- cbind(WEI_365, CCIw_365 , sp500_52week_change_365 )
+VAR4 <- VAR(Y,p=3,type = c('const'))
+fVAR4 <- forecast(VAR4, h=208)
+autoplot(fVAR4$forecast$WEI)
+VAR4$varresult$WEI$coefficients
+
+fcombined = matrix(0,length(fARMA_1$mean),6)
+for (i in 1:208){
+  fcombined[i,2] = 0.5*as.numeric(fVAR4$forecast$WEI_365$mean[i])+0.5*as.numeric(fARMA_1$mean[i])
+  fcombined[i,3] = 0.5*as.numeric(fVAR4$forecast$WEI_365$lower[i,1])+0.5*as.numeric(fARMA_1$lower[i,1])
+  fcombined[i,4] = 0.5*as.numeric(fVAR4$forecast$WEI_365$lower[i,2])+0.5*as.numeric(fARMA_1$lower[i,2])
+  fcombined[i,5] = 0.5*as.numeric(fVAR4$forecast$WEI_365$upper[i,1])+0.5*as.numeric(fARMA_1$upper[i,1])
+  fcombined[i,6] = 0.5*as.numeric(fVAR4$forecast$WEI_365$upper[i,2])+0.5*as.numeric(fARMA_1$upper[i,2])
+}
+
+combinedForecast_1 = ts( c(as.vector(WEI_365),fcombined[,2]), decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+combinedForecast_low1 = ts( c(as.vector(WEI_365),fcombined[,3]), decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+combinedForecast_low2 = ts( c(as.vector(WEI_365),fcombined[,4]), decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+combinedForecast_high1 = ts( c(as.vector(WEI_365),fcombined[,5]), decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+combinedForecast_high2 = ts( c(as.vector(WEI_365),fcombined[,6]), decimal_date(ymd("2008-01-05")), frequency = 365.25/7)
+
+ts.plot(combinedForecast_low1, combinedForecast_low2, combinedForecast_high1, combinedForecast_high2, combinedForecast_1, 
+        col= c('#4842f5','#00b5af','#4842f5', '#00b5af','#000000'), ylab = 'WEI', main = 'Combined Var(3) and ARMA(2,3) froecasts') 
+legend('bottomleft', legend = c('95% low', '80 low', '95% high' ,'80% high','forecast'), col =  c('#4842f5','#00b5af','#4842f5', '#00b5af','#000000'), lty=1)
+
+# The calculation of the SSR of the combined model.
+fcombined2 = matrix(0,636,2)
+for (i in 4:639){
+  fcombined2[i-3,2] = 0.5*as.numeric(VAR4$varresult$WEI_365$fitted.values[i-3])+0.5*as.numeric(fit_1$fitted[i])
+}
+residuals_combined = c()
+for(i  in 4:639){
+  residuals_combined[i-3] = as.vector(WEI_365)[i] - fcombined2[i-3,2]
+}
+SSR_c = sum(residuals_combined^2)
+SSR_VAR = sum(as.numeric(VAR4$varresult$WEI_365$residuals)^2)
+SSR_ARMA = sum(as.numeric(fit_1$residuals)[4:639]^2)
+SSR = matrix(c(SSR_c, SSR_VAR, SSR_ARMA),1,3)
+rownames(SSR)  <- c("SSR")
+colnames(SSR)  <- c('Combined','VAR(3)','ARMA(2,3)')
+SSR
+
+############################## This is code we did not use in the paper, but gave different insights #############
+
+# From these plots we suspected non covariance stationarity 
+acf(data_1$sp500_52week_change)
+pacf(data_1$sp500_52week_change)
+
+acf(data_1$CCIw)
+pacf(data_1$CCIw)
+
+
+
