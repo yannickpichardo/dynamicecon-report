@@ -123,7 +123,7 @@ autoplot(fARMA_3)
 
 
 #forecasting with VAR
-Y <- cbind(WEI_365, CCIn, sp500_52week_change_365 )
+Y <- cbind(WEI_365, CCIw_365 , sp500_52week_change_365 )
 VAR4 <- VAR(Y,p=3,type = c('const'))
 fVAR4 <- forecast(VAR4, h=208)
 autoplot(fVAR4$forecast$WEI)
@@ -139,7 +139,7 @@ print(summ$coefficients,digits=1)
 
 
 Y <- cbind(WEI_365, CCIw_365, sp500_52week_change_365 )
-VAR4 <- VAR(Y,p=4,type = c('const'))
+VAR4 <- VAR(Y,p=3,type = c('const'))
 corder1  <- order(names(VAR4$varresult$WEI$coefficients))
 corder2  <- order(names(summ$coefficients[,1]))
 coefVAR  <- cbind(VAR4$varresult$WEI$coefficients[corder1],
@@ -230,10 +230,14 @@ rownames(mseARMA)  <- c("26-step","52-step","200-step")
 
 mseARMA
 
+
+
+
+
 #MSE of the ARMA models
 es     <- as.Date("2008/1/5") # Estimation start
 fs     <- as.Date("2016/1/2") # First forecast 
-fe     <- as.Date("2020/2/1")# Final forecast
+fe     <- as.Date("2020/03/21")# Final forecast
 
 convert_date <- function(date){
   c(as.numeric(format(date,'%Y')),
@@ -287,7 +291,23 @@ for (p in 1:3){
   colnames(mseARMA)  <- c('ARMA(2,3)','ARMA(3,0)','ARMA(5,4)')
   mseARMA
 
-
+  
+h_all     <- c(26,52,104)      # Which horizons to consider
+lh        <- length(h_all)
+abeARMA   <- matrix(NA,lh,3)
+p = c(2,3,5)
+q = c(3,0,4)
+parameters = as.data.frame(cbind(p,q))
+for (p in 1:3){
+  for (i in seq(1,lh)){
+  fcARMA             <- in_out_ARMA(h_all[i],parameters[p,1],parameters[p,2])
+  abeARMA[i,p]    <- colMeans(abs(fcARMA$fce), na.rm = T)
+  }
+}
+rownames(mseARMA)  <- c("26-step","52-step","104-step")
+colnames(mseARMA)  <- c('ARMA(2,3)','ARMA(3,0)','ARMA(5,4)')
+  
+abeARMA
 
 
 
@@ -351,7 +371,7 @@ round(compare_CCI,digits=3)
 
 
 #IRF analysis
-Y           <- cbind(sp500_52week_change_365 , CCIw_365,  WEI_365)
+Y           <- cbind(sp500_52week_change_365 , CCIw_365  ,  WEI_365)
 colnames(Y) <- c('CCI','SP500', 'WEI' )
 VARmodel    <- VAR(Y,p=3,type=c("const"))
 roots(VARmodel) # computes eigenvalues of companion matrix
@@ -371,7 +391,7 @@ irf_WEI_CCI <- irf(VARmodel,impulse=c("CCI"),
 plot(irf_WEI_CCI,plot.type=c("single"))
 
 
-Y           <- cbind(CCIw_365, sp500_52week_change_365 , WEI_365)
+Y           <- cbind(CCIw_365  , sp500_52week_change_365 , WEI_365)
 colnames(Y) <- c('CCI', 'SP500', 'WEI')
 VARmodel_ic <- VARselect(Y,type=c("const"),lag.max=8)
 ic          <- as.data.frame(t(VARmodel_ic$criteria))
@@ -380,35 +400,35 @@ ggplot(data=ic, aes(x=seq(1,8),y=`SC(n)`))+geom_line()+ylab("BIC")+xlab("VAR(p)"
 ggplot(data=ic, aes(x=seq(1,8),y=`AIC(n)`))+geom_line()+ylab("AIC")+xlab("VAR(p)")
 
 #restricted VAR
-p1        <- 9;
-VARr     <- VAR(Y,p=p1,type=c("const"))
+p1        <- 3;
+VARr     <- VAR(CCIw_365  ,p=p1,type=c("const"))
 nseries  <- 3;
 #mones    <- matrix(1,nrow = nseries,ncol=nseries) 
 #mzero    <- matrix(0,nrow = nseries,ncol=nseries) 
 vones    <- matrix(1,nrow = nseries,ncol=1)
 lag1mat <- matrix(c(1, 1, 1,
-                    0, 1, 0,
+                    1, 1, 1,
                     1, 1, 1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE) # lag matrix cols = cci, sp500 and WEI. Rows are the same but indicate the equation. E.g. if [1,3] = 1 then the CCI equation will include lag 1 of the WEI
-lag2mat <- matrix(c(0, 0, 1,
-                    0, 1, 1,
-                    0, 1, 1)
+lag2mat <- matrix(c(1, 1, 1,
+                    1, 1, 1,
+                    1, 1, 1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
-lag3mat <- matrix(c(1, 0, 0,
-                    0, 1, 0,
-                    0, 0, 1)
+lag3mat <- matrix(c(1, 1, 1,
+                    1, 1, 1,
+                    1, 1, 1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
-lag4mat <- matrix(c(1, 0, 1,
-                    0, 1, 0,
-                    0, 0,1)
+lag4mat <- matrix(c(1, 1, 1,
+                    1, 1, 1,
+                    1, 1, 1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
-lag5mat <- matrix(c(0, 1, 0,
-                    0, 1, 0,
-                    1, 0, 1)
+lag5mat <- matrix(c(1, 1, 1,
+                    1, 1, 1,
+                    1, 1, 1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
-lag6mat <- matrix(c(1, 1, 0,
-                    0, 1, 0,
-                    1, 0, 1)
+lag6mat <- matrix(c(1, 1, 1,
+                    1, 1, 1,
+                    1, 1, 1)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
 lag7mat <- matrix(c(1, 0, 0,
                     1, 0, 0,
@@ -422,7 +442,7 @@ lag9mat <- matrix(c(0, 0, 0,
                     0, 0, 0,
                     0, 0, 0)
                   ,nrow = nseries,ncol=nseries, byrow = TRUE)
-restrict <- matrix(cbind(lag1mat, lag2mat, lag3mat, lag4mat, lag5mat, lag6mat, lag7mat, lag8mat, lag9mat, vones), nrow = 3, ncol = p1*3+1) # order is: lag 1, ..., lag p and then the constant
+restrict <- matrix(cbind(lag1mat, lag2mat, lag3mat, vones), nrow = 3, ncol = p1*3+1) # order is: lag 1, ..., lag p and then the constant
 
 
 VARr     <- restrict(VARr, method = "man", resmat = restrict)
@@ -470,3 +490,32 @@ plot(irf_WEI_CCI,plot.type=c("single"))
 #print(Ftest)
 #
 
+fit_1 <- Arima(WEI_365, order = c(2,0,3))
+fARMA_1 <- forecast(fit_1,h=208)
+autoplot(fARMA_1) 
+
+Y <- cbind(WEI_365, CCIw_365 , sp500_52week_change_365 )
+VAR4 <- VAR(Y,p=3,type = c('const'))
+fVAR4 <- forecast(VAR4, h=208)
+autoplot(fVAR4$forecast$WEI)
+VAR4$varresult$WEI$coefficients
+
+fARMA_1$
+fVAR4[[2]][[1]]
+fVAR4$forecast$WEI_365$mean
+
+fcombined = matrix(0,length(fARMA_1$mean),6)
+for (i in 1:208){
+  fcombined[i,2] = 0.5*as.numeric(fVAR4$forecast$WEI_365$mean[i])+0.5*as.numeric(fARMA_1$mean[i])
+  fcombined[i,3] = 0.5*as.numeric(fVAR4$forecast$WEI_365$lower[i,1])+0.5*as.numeric(fARMA_1$lower[i,1])
+  fcombined[i,4] = 0.5*as.numeric(fVAR4$forecast$WEI_365$lower[i,2])+0.5*as.numeric(fARMA_1$lower[i,2])
+  fcombined[i,5] = 0.5*as.numeric(fVAR4$forecast$WEI_365$upper[i,1])+0.5*as.numeric(fARMA_1$upper[i,1])
+  fcombined[i,6] = 0.5*as.numeric(fVAR4$forecast$WEI_365$upper[i,2])+0.5*as.numeric(fARMA_1$upper[i,2])
+}
+fe     <- as.Date("2020/03/21")
+combinedForecast = ts(fcombined[,2], start = decimal_date(ymd("2020-03-05")), frequency = 365.25/7)
+
+
+  
+  
+  
